@@ -1,269 +1,428 @@
 import * as THREE from "three";
-import ThreeGlobe from "https://esm.sh/three-globe?external=three";
+import * as dat from "dat";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+import { MeshSurfaceSampler } from "three/addons/math/MeshSurfaceSampler.js";
 
-import countries from "./assets/custom.geo.json" with { type: "json" };
-import map from "./assets/map.json" with { type: "json" };
-
+const model_file = "./models/scene4.glb";
 const canvas = document.querySelector("#globe-canvas");
-var renderer, camera, scene, controls, isGrabbing;
+var renderer, camera, scene, controls, texture_loader;
+var dLight;
 
-var Globe;
+let mouseX = 0;
+let mouseY = 0;
+let camera_aspect = canvas.clientWidth / canvas.clientHeight;
+let windowX = canvas.clientWidth;
+let windowY = canvas.clientHeight;
 
-const colors = ["#70BB40","#009FD6","#23495D","#23485C"]
-const globe_color = 0xe6e9eb
-  const globe_emissive = 0xeff8fb
-  const globe_dots = "#23485Caa"
-  const globe_dots_active = "#23485C"
+var particlesMesh, particlesGroup, particlesScale;
+var morphingMesh, morphingGroup;
+var shipPosArray, shipPosArray2, spherePosArray, flatSpherePosArray;
 
-  let mapPoints = []
-  let dotAlt = 0.01
-  let dotSize = 1
-
-const N = map.points.length
-const lines = [...Array(N).keys()].map((i) => {
-  const from = i
-  // const from = Math.round(Math.random() * (map.points.length-1))
-  const initTo = Math.round(Math.random() * (map.points.length-1))
-  const to = from !== initTo ? initTo : Math.round(Math.random() * (map.points.length-1))
-
-  const p1 = [map.points[from].lat, map.points[from].lng]
-  const p2 = [map.points[to].lat, map.points[to].lng]
-
-  const p1Int = [Number(map.points[from].lat), Number(map.points[from].lng)]
-  const p2Int = [Number(map.points[to].lat), Number(map.points[to].lng)]
-
-  return ({
-      type: "infoFlow",
-      order: 1,
-      from: map.points[from].text,
-      to: map.points[to].text,
-      startLat: p1[0],
-      startLng: p1[1],
-      endLat: p2[0],
-      endLng: p2[1],
-      arcDashGap: (Math.random()*10) + i,
-      arcColor: colors[Math.round(Math.random() * (colors.length-1))],
-      order: i > 1 ? i - Math.random() : i
-      // distance: Math.acos(Math.sin(p1Int[0])*Math.sin(p2Int[0]) + Math.cos(p1Int[0])*Math.cos(p2Int[0])*Math.cos(Math.abs(p1Int[1]-p2Int[1]))),
-      // arcAlt: String(Math.sin(Math.acos(Math.sin(p1Int[0])*Math.sin(p2Int[0]) + Math.cos(p1Int[0])*Math.cos(p2Int[0])*Math.cos(Math.abs(p1Int[1]-p2Int[1]))))/5)
-  })
-});
-console.log(lines)
-
-const gData = [...Array(map.points.length).keys()].map((i) => ({
-  lat: map.points[i].lat,
-  lng: map.points[i].lng,
-  maxR: 2,
-  propagationSpeed: 1,
-  repeatPeriod: 1000,
-}));
-  
-
+function degToRad(degrees) {
+  return degrees * (Math.PI / 180);
+}
 
 init();
-initGlobe();
+initModel();
+initParticles();
+initGUI();
 onWindowResize();
 animate();
+gsapAnimate();
 
 // ! INIT
 function init() {
+  texture_loader = new THREE.TextureLoader();
+
   // * RENDERER
   renderer = new THREE.WebGLRenderer({ antialias: true, canvas });
   renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setClearColor(0x000000, 0);
 
   //   * SCENE
   scene = new THREE.Scene();
 
   //  * CAMERA
-  camera = new THREE.PerspectiveCamera();
-  camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  camera = new THREE.PerspectiveCamera(75, camera_aspect, 0.1, 2000);
   camera.updateProjectionMatrix();
 
   camera.position.z = 300;
-  camera.position.x = 0;
-  camera.position.y = 100;
 
   scene.add(camera);
   scene.fog = new THREE.Fog(0xeff8fb, 405, 2000);
 
   //   * LIGHT
-  var ambientLight = new THREE.AmbientLight(0xeff8fb);
+  var ambientLight = new THREE.AmbientLight(0xffffff);
   scene.add(ambientLight);
-  scene.background = new THREE.Color(0xffffff);
 
-  var dLight = new THREE.DirectionalLight(0xeff8fb, 0.8);
-  dLight.position.set(-800, 1000, 400);
+  dLight = new THREE.DirectionalLight(0xffffff, 1000);
+  dLight.position.set(-1, 2, 200);
   camera.add(dLight);
-
-  var dLight2 = new THREE.DirectionalLight(0x7582f6, 1);
-  dLight2.position.set(-200, 500, 200);
-  camera.add(dLight2);
-
-  var dLight3 = new THREE.PointLight(0xeff8fb, 0.5);
-  dLight3.position.set(-200, 500, 200);
-  camera.add(dLight3);
 
   //   * CONTROLS
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dynamicDampingFactor = 0.01;
   controls.enablePan = false;
-  controls.minDistance = 280;
-  controls.maxDistance = 300;
+  controls.minDistance = 200;
+  controls.maxDistance = 500;
   controls.rotateSpeed = 0.8;
-  controls.autoRotateSpeed = 1;
-  controls.zoomSpeed = 0.1;
-  controls.autoRotate = true;
+  controls.zoomSpeed = 1;
+  controls.autoRotate = false;
 
   controls.minPolarAngle = Math.PI / 3.5;
-  controls.maxPolarAngle = Math.PI - Math.PI / 3;
+  controls.maxPolarAngle = (Math.PI * Math.PI) / 3;
 
-  window.addEventListener("resize", onWindowResize, false);  
-  window.addEventListener("mousedown", onMouseDown);
-  window.addEventListener("mouseup", onMouseUp);
+  window.addEventListener("resize", onWindowResize, false);
+  window.addEventListener("mousemove", onMouseMove);
 }
 
-function onMouseDown(e){
-  isGrabbing = true
-  console.log(isGrabbing)
-}
+// ! MODEL
+function initModel() {
+  // Instantiate a loader
+  const loader = new GLTFLoader();
+  // Optional: Provide a DRACOLoader instance to decode compressed mesh data
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath("/examples/jsm/libs/draco/");
+  loader.setDRACOLoader(dracoLoader);
+  // Load a glTF resource
+  loader.load(
+    // resource URL
+    model_file,
+    // called when the resource is loaded
+    function (gltf) {
+      const model = gltf.scene;
+      model.position.set(0, -150, 0);
+      model.name = "Ship";
+      // scene.add(model);
+      console.log("🚀 ~ initModel ~ model:", model);
 
-function onMouseUp(e){
-  isGrabbing = false
-  console.log(isGrabbing)
-}
+      var ship_array = [];
 
+      // GET POSITIONS FROM THE MODEL
+      gltf.scene.traverse((obj) => {
+        if (obj.isMesh) {
+          const vertices = obj.geometry.attributes.position;
+          var sampler = new MeshSurfaceSampler(obj).build();
+          for (let i = 0; i < vertices.count; i++) {
+            const sample = new THREE.Vector3();
+            sampler.sample(sample);
 
-// countries.features.map((item, i) => {
-  countries.features.forEach(item => {
-    item.geometry.coordinates.forEach(item2 => {
-      if (item2.length === 1 && item2 instanceof Array){
-        item2[0].forEach(element => {
-          mapPoints.push({
-            lat: element[0],
-            lng:element[1],
-            alt:dotAlt,
-            size: dotSize,
-          })
-        });
-      }  else if(item2 instanceof Array) {
-        item2.forEach(item3 => {
-          if (item3.length === 1 && item3 instanceof Array){
-            item3[0].forEach(element => {
-              mapPoints.push({
-                lat: element[0],
-                lng:element[1],
-                alt:dotAlt,
-                size: dotSize,
-              })
-            });
-          } else if(item3 instanceof Array) {
-            item3.forEach(item4 => {
-              if (item4.length === 1 && item4 instanceof Array){
-                item4[0].forEach(element => {
-                  mapPoints.push({
-                    lat: element[0],
-                    lng:element[1],
-                    alt:dotAlt,
-                    size: dotSize,
-                  })
-                });
-              } else if(item4 instanceof Array) {
-                item4.forEach(item5 => {
-                  if (item5.length === 1 && item5 instanceof Array){
-                    item5[0].forEach(element => {
-                      mapPoints.push({
-                        lat: element[0],
-                        lng:element[1],
-                        alt:dotAlt,
-                        size: dotSize,
-                      })
-                    });
-                  }
-                });
-              }
-            });
+            ship_array.push(sample.x);
+            ship_array.push(sample.y);
+            ship_array.push(sample.z);
           }
-        });
-      }
-        
-    });
+        }
+      });
+
+      initMorphingParticles(ship_array);
+    },
+    // called while loading is progressing
+    function (xhr) {
+      console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+    },
+    // called when loading has errors
+    function (error) {
+      console.log("An error happened", error);
+    }
+  );
+}
+
+// ! PARTICLES
+function initParticles() {
+  var distance =
+    window.innerHeight > window.innerWidth
+      ? Math.min(200, canvas.clientHeight / 2)
+      : Math.min(200, canvas.clientWidth / 4);
+
+  // * GEOMETRY
+  var geometry = new THREE.BufferGeometry();
+  const no_of_partices = 300;
+  const posArray = new Float32Array(no_of_partices * 3);
+
+  for (var i = 0; i < no_of_partices * 3; i++) {
+    posArray[i] = distance * (Math.random() - 0.5) * 15;
+  }
+
+  geometry.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
+
+  // * MATERIAL
+  const material = new THREE.PointsMaterial({
+    color: "white",
+    size: 8,
+    // depthTest: false,
   });
 
-console.log(mapPoints)
+  // * MESH
+  particlesMesh = new THREE.Points(geometry, material);
+  // particlesMesh.boundingSphere = 50;
 
-// ! GLOBE
-function initGlobe() {
-  Globe = new ThreeGlobe({
-    waitForGlobeReady: true,
-    animate: true,
-  })
-  .customLayerData(mapPoints)
-  .customThreeObject(d => new THREE.Mesh(
-    new THREE.SphereGeometry(d.size),
-    new THREE.MeshLambertMaterial({ color: "red" })
-  ))
-  .customThreeObjectUpdate((obj, d) => {
-    Object.assign(obj.position, Globe.getCoords(d.lat, d.lng, d.alt));
+  // * GROUP
+  particlesGroup = new THREE.Group();
+  particlesGroup.add(particlesMesh);
+
+  particlesScale = new THREE.Group();
+  particlesScale.add(particlesGroup);
+
+  scene.add(particlesScale);
+}
+
+function initMorphingParticles(model_array) {
+  // * GEOMETRY POINTS FOR MODEL
+  var no_of_partices = model_array.length;
+  var distance = Math.min(140, canvas.clientWidth / 3);
+
+  shipPosArray = new Float32Array(no_of_partices);
+  shipPosArray2 = new Float32Array(no_of_partices);
+  spherePosArray = new Float32Array(no_of_partices);
+  flatSpherePosArray = new Float32Array(no_of_partices);
+
+  for (let i = 0; i < no_of_partices; i++) {
+    shipPosArray[i] = model_array[i];
+  }
+
+  for (var i = 0; i < no_of_partices; i += 3) {
+    var theta = THREE.MathUtils.randFloatSpread(360);
+    var phi = THREE.MathUtils.randFloatSpread(360);
+
+    spherePosArray[i] = distance * Math.sin(theta) * Math.sin(phi);
+    spherePosArray[i + 1] = distance * Math.sin(theta) * Math.cos(phi);
+    spherePosArray[i + 2] = distance * Math.cos(theta);
+  }
+
+  for (var i = 0; i < no_of_partices; i += 3) {
+    var theta = THREE.MathUtils.randFloatSpread(360);
+    var phi = THREE.MathUtils.randFloatSpread(360);
+
+    flatSpherePosArray[i] = distance * Math.sin(theta) * Math.cos(phi * 5);
+    flatSpherePosArray[i + 1] = distance * Math.sin(theta) * Math.sin(phi) * 5;
+    flatSpherePosArray[i + 2] = distance * Math.cos(theta) * 5;
+  }
+
+  // *GEOMETRY
+  var geometry = new THREE.BufferGeometry();
+
+  geometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(spherePosArray, 3)
+  );
+
+  // * MATERIAL
+  const material = new THREE.PointsMaterial({
+    color: "white",
+    size: 2,
+    // depthTest: false,
   });
-    // .hexPolygonsData(countries.features)
-    // .hexPolygonResolution(3)
-    // .hexPolygonMargin(0.5)
-    // .showAtmosphere(true)
-    // .atmosphereColor("#eff8fb")
-    // .atmosphereAltitude(0.25)
-    // .hexPolygonColor(()=> {return isGrabbing ? globe_dots_active : globe_dots})
-    // // .hexPolygonAltitude(0.01)
 
-    // setTimeout(() => {
-    //   Globe.arcsData(lines)
-    //   .arcColor((e)=>{
-    //     return e.arcColor
-    //   })
-    //   .arcStroke((e)=>{
-    //     return 0.3
-    //   })
-    //   .arcAltitudeAutoScale(0.4)
-    //   .arcDashLength(2)
-    //   .arcDashGap((e)=>{
-    //     return e.arcDashGap
-    //   })
-    //   .arcDashAnimateTime(1000)
-    //   .arcsTransitionDuration(0)
-    //   .arcDashInitialGap((e) => e.order * 1)
+  // * MESH
+  morphingMesh = new THREE.Points(geometry, material);
+  morphingMesh.rotation.set(degToRad(-45), 0, degToRad(90));
+  morphingMesh.position.set(0, 0, 0);
+  morphingMesh.scale.set(1, 1, 1);
+  morphingMesh.name = "Morphing Mesh";
 
-    //   .labelsData(map.points)
-    //   .labelColor(() => colors[Math.round(Math.random() * 3)])
-    //   .labelDotRadius(0.4)
-    //   .labelSize((e) => 0)
-    //   .labelResolution(6)
-    //   .labelAltitude(0)
-    // }, 3000);
+  // * GROUP
+  morphingGroup = new THREE.Group();
+  morphingGroup.add(morphingMesh);
+  morphingGroup.name = "Morphing Group";
 
-  //  * GLOBE ROTATION
-  Globe.rotateY(-Math.PI * (5 / 9));
-  Globe.rotateZ(-Math.PI / 6);
+  scene.add(morphingGroup);
+  gsapAnimate();
+}
 
-  gsap.from(Globe.scale, { duration: 2, x: 0.7 })
-  gsap.from(Globe.scale, { duration: 2, y: 0.7 })
-  gsap.from(Globe.scale, { duration: 2, z: 0.7 })
-  gsap.to(Globe.rotation, { duration: 2, y: 1 })
-  // gsap.to(Globe.rotation, { duration: 2, z: 0.2 })
-  
-   
-  //  * GLOBE MATERIAL
-  const globeMaterial = Globe.globeMaterial();
-  // globeMaterial.bumpScale = 10;
-  globeMaterial.color = new THREE.Color(globe_color);
-  globeMaterial.emissive = new THREE.Color(globe_emissive);
-  globeMaterial.emissiveIntensity = 0.45;
-  globeMaterial.shininess = 1;
-  globeMaterial.transparent = true;
-  globeMaterial.opacity = 0.85;
+function initGUI() {
+  const gui = new dat.GUI();
 
+  if (camera) {
+    // Plane GUI
+    const cameraGUI = gui.addFolder("Camera Position");
+    cameraGUI.add(camera.position, "x").min(0).max(1000);
+    cameraGUI.add(camera.position, "y").min(0).max(1000);
+    cameraGUI.add(camera.position, "z").min(0).max(1000);
+    cameraGUI.open();
+  }
 
-  scene.add(Globe);
+  // Light GUI
+  const lightGUI = gui.addFolder("DLight");
+  lightGUI.add(dLight.position, "x").min(-500).max(500);
+  lightGUI.add(dLight.position, "y").min(-500).max(500);
+  lightGUI.add(dLight.position, "z").min(-500).max(500);
+
+  // Light GUI
+  // const slightGUI = gui.addFolder("SpotLight");
+  // slightGUI.add(sLight.position, "x").min(-500).max(500);
+  // slightGUI.add(sLight.position, "y").min(-500).max(500);
+  // slightGUI.add(sLight.position, "z").min(-500).max(500);
+}
+
+// ! MOUSE TRIGGER
+function onMouseMove(e) {
+  mouseX = (e.clientX / windowX) * 0.4 - 1;
+  mouseY = (e.clientY / windowY) * 0.4 + 1;
+
+  gsap.to(particlesMesh.rotation, {
+    duration: 1.5,
+    x: mouseY * -1,
+    y: mouseX,
+    ease: "power.in",
+  });
+}
+
+// ! ANIMATION WITH GSAP
+function gsapAnimate() {
+  var props = {
+    scale: 1,
+    xRot: 0,
+    yRot: 0,
+    zRot: 0,
+  };
+
+  gsap.to(props, {
+    duration: 200,
+    xRot: Math.PI * 0.5,
+    yRot: -Math.PI * 3,
+    zRot: -Math.PI * 1,
+    repeat: -1,
+    yoyo: true,
+    ease: "none",
+    onUpdate: function () {
+      particlesGroup.rotation.set(props.xRot, props.yRot, props.zRot);
+    },
+  });
+
+  //  morphingMesh.rotation.set(degToRad(-90), 0, degToRad(45)); // Init
+  //  morphingMesh.rotation.set(degToRad(-90), 0, degToRad(0)); // Sphere &  FlatSphere
+  // morphingMesh.rotation.set(degToRad(-45), 0, degToRad(90));
+  //  morphingMesh.position.set(0, 50, 0); // Ship
+  //  morphingMesh.position.set(0, 0, 0); // Sphere & FlatSphere
+  const tl = gsap.timeline();
+  let morphingProps = {
+    scale: 0,
+    xPos: 0,
+    yPos: 0,
+    zPos: 0,
+    xRot: 0,
+    yRot: 0,
+    zRot: 0,
+  };
+
+  if (morphingMesh) {
+    tl.to(morphingProps, {
+      scale: 1,
+      xRot: degToRad(0),
+      yRot: degToRad(0),
+      zRot: degToRad(0),
+      duration: 1,
+      ease: "power2",
+      onUpdate: function () {
+        morphingMesh.scale.set(
+          morphingProps.scale,
+          morphingProps.scale,
+          morphingProps.scale
+        );
+        morphingMesh.rotation.set(
+          morphingProps.xRot,
+          morphingProps.yRot,
+          morphingProps.zRot
+        );
+      },
+    })
+      .to(
+        morphingMesh.geometry.attributes.position.array,
+        {
+          endArray: flatSpherePosArray,
+          duration: 4,
+          ease: "power2.out",
+          onUpdate: () => {
+            morphingMesh.geometry.attributes.position.needsUpdate = true;
+            camera.lookAt(morphingMesh.position);
+            renderer.render(scene, camera);
+          },
+        },
+        "<"
+      )
+      .to(
+        morphingProps,
+        {
+          scale: 1,
+          xRot: degToRad(-45),
+          yRot: degToRad(0),
+          zRot: degToRad(0),
+          xPos: 0,
+          yPos: 0,
+          zPos: -150,
+          duration: 2,
+          ease: "power2.in",
+          onUpdate: function () {
+            morphingMesh.rotation.set(
+              morphingProps.xRot,
+              morphingProps.yRot,
+              morphingProps.zRot
+            );
+            morphingMesh.position.set(
+              morphingProps.xPos,
+              morphingProps.yPos,
+              morphingProps.zPos
+            );
+          },
+        },
+        ">-2"
+      )
+      .to(
+        morphingProps,
+        {
+          scale: 1,
+          xRot: degToRad(-90),
+          zRot: degToRad(0),
+          yPos: 50,
+          duration: 2,
+          ease: "power2.out",
+          onUpdate: function () {
+            morphingMesh.scale.set(
+              morphingProps.scale,
+              morphingProps.scale,
+              morphingProps.scale
+            );
+            morphingMesh.rotation.set(
+              morphingProps.xRot,
+              0,
+              morphingProps.zRot
+            );
+            morphingMesh.position.set(0, morphingProps.yPos, 0);
+          },
+        },
+        ">"
+      )
+      .to(
+        morphingMesh.geometry.attributes.position.array,
+        {
+          endArray: shipPosArray,
+          duration: 3,
+          ease: "power2.out",
+          onUpdate: () => {
+            morphingMesh.geometry.attributes.position.needsUpdate = true;
+            camera.lookAt(morphingMesh.position);
+            renderer.render(scene, camera);
+          },
+        },
+        "<"
+      )
+      .to(
+        morphingProps,
+        {
+          zRot: degToRad(360),
+          duration: 8,
+          repeat: -1,
+          ease: "none",
+          onUpdate: function () {
+            morphingMesh.rotation.set(degToRad(-90), 0, morphingProps.zRot);
+          },
+        },
+        ">-1"
+      );
+  }
 }
 
 function resizeRendererToDisplaySize(renderer) {
@@ -282,6 +441,8 @@ function resizeRendererToDisplaySize(renderer) {
 function onWindowResize() {
   camera.aspect = canvas.clientWidth / canvas.clientHeight;
   camera.updateProjectionMatrix();
+  windowX = canvas.clientWidth;
+  windowY = canvas.clientHeight;
 }
 
 // ! ANIMATE
@@ -291,9 +452,6 @@ function animate() {
     camera.aspect = canvas.clientWidth / canvas.clientHeight;
     camera.updateProjectionMatrix();
   }
-
-  Globe.hexPolygonColor(()=> {return isGrabbing ? globe_dots_active : globe_dots})
-
   camera.lookAt(scene.position);
   controls.update();
   renderer.render(scene, camera);

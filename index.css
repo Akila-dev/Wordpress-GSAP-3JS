@@ -1,3 +1,13 @@
+:root {
+  --brand: #d6f246;
+  --accent: #1d1375;
+  --white: #ffffff;
+  --dark: #050218;
+  --neutral: #aeb2cb;
+  --card: #eceaff;
+  --body: #28282c;
+}
+
 *,
 html,
 body {
@@ -7,31 +17,20 @@ body {
 }
 
 .container {
+  position: relative;
   width: 100%;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5vw;
-  background: #eff8fb;
+  padding: 0px;
+  background: var(--dark);
   overflow: hidden;
   /* background: #f6f9fb; */
 }
-.canvas-continer {
-  width: 100%;
-  max-width: 1140px;
-  margin: 0 auto;
-  position: relative;
-  min-height: 80vh;
-  overflow: hidden;
-  background-color: white;
-}
 
 #globe-canvas {
-  position: absolute;
-  top: 5%;
-  left: 40%;
-  width: 900px;
-  height: 900px;
+  width: 100%;
+  height: 100vh;
   display: block;
 }
