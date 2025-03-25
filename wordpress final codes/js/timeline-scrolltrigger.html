@@ -1,0 +1,46 @@
+<script type="module" async defer>
+  gsap.registerPlugin(ScrollTrigger);
+
+  // * TIMELINE
+  const timeline_container = document.querySelector(".timeline-container");
+
+  if (timeline_container) {
+    let cards = timeline_container.querySelectorAll(".timeline-card");
+    let dots = gsap.utils.toArray(".timeline-dot");
+
+    // 		LINE TIMELINE
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: timeline_container,
+        start: "top 60%",
+        end: "bottom 60%",
+        scrub: -10,
+      },
+    });
+
+    tl.to(".timeline-dark", {
+      height: "100%",
+      ease: "none",
+    });
+
+    // 		Cards Timeline
+    let mm = gsap.matchMedia();
+
+    mm.add("(min-width: 768px)", () => {
+      cards.forEach((card, i) => {
+        const ctl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: "top bottom",
+            end: "bottom center",
+            scrub: -10,
+          },
+        });
+
+        ctl.from(card, {
+          x: i % 2 ? "5em" : "-5em",
+        });
+      });
+    });
+  }
+</script>

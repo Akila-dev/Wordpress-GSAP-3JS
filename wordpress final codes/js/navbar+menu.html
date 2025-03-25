@@ -1,0 +1,25 @@
+<script async defer>
+  if (document.querySelector(".transparent-navbar")) {
+    if (window.scrollY >= 120) {
+      document.querySelector(".transparent-navbar").style.background =
+        "var(--dark)";
+    } else {
+      document.querySelector(".transparent-navbar").style.background =
+        "#00000000";
+    }
+
+    document.addEventListener(
+      "scroll",
+      function () {
+        if (window.scrollY >= 120) {
+          document.querySelector(".transparent-navbar").style.background =
+            "var(--dark)";
+        } else {
+          document.querySelector(".transparent-navbar").style.background =
+            "#00000000";
+        }
+      },
+      false
+    );
+  }
+</script>

@@ -1,0 +1,275 @@
+<script type="module">
+  const g_sections = document.querySelectorAll(".gsap-section");
+  g_sections.forEach((g_section) => {
+    g_section.style.opacity = 1;
+  });
+</script>
+
+<script type="module" async defer>
+  // 	ON HOVER ANIMATIONS
+  const buttons = gsap.utils.toArray(".gsap-section a");
+  const hover_scale = gsap.utils.toArray(".hover-scale");
+
+  function scaleUp(target) {
+    gsap.to(target, {
+      scale: 1.1,
+      duration: 1.5,
+      ease: "elastic.out(1,0.9)",
+    });
+  }
+
+  function scaleDown(target) {
+    gsap.to(target, {
+      scale: 1,
+      duration: 1.5,
+      ease: "elastic.out(1,0.9)",
+    });
+  }
+
+  // 	BUTTONS
+  buttons.forEach((button) => {
+    Observer.create({
+      target: button,
+      type: "pointer",
+      onHover: () => scaleUp(button),
+      onHoverEnd: () => scaleDown(button),
+    });
+  });
+
+  // 	OBJECTS WITH HOVER-SCALE CLASS
+  hover_scale.forEach((hover_item) => {
+    Observer.create({
+      target: hover_item,
+      type: "pointer",
+      onHover: () => scaleUp(hover_item),
+      onHoverEnd: () => scaleDown(hover_item),
+    });
+  });
+
+  // 	FOOTER INTRO ANIMATION
+  const footer_sections = gsap.utils.toArray(".footer-container");
+
+  if (footer_sections) {
+    footer_sections.forEach((section) => {
+      let top = section.querySelector(".slide-in-up-top");
+      let center = section.querySelector(".slide-in-up-center");
+      let sides = section.querySelectorAll(".slide-in-up-side");
+      let bottom = section.querySelector(".slide-in-up-bottom");
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top+=" + window.innerHeight * 0.9,
+          // 				markers: true,
+        },
+        defaults: {
+          duration: 1,
+          ease: "power2",
+          stagger: 0.25,
+        },
+      });
+
+      const slideInUp = {
+        y: "3em",
+        opacity: 0,
+      };
+
+      const sectionStagger = "<+=0.5";
+
+      if (top) {
+        tl.from(top.querySelectorAll(".slide-in-up"), slideInUp);
+      }
+
+      if (center) {
+        tl.from(
+          center.querySelectorAll(".slide-in-up"),
+          slideInUp,
+          sectionStagger
+        );
+      }
+
+      if (sides.length > 0) {
+        sides.forEach((side, i) => {
+          if (i === 0) {
+            tl.from(
+              side.querySelectorAll(".slide-in-up"),
+              slideInUp,
+              sectionStagger
+            );
+          } else {
+            tl.from(side.querySelectorAll(".slide-in-up"), slideInUp, "<");
+          }
+        });
+      }
+
+      if (bottom > 0) {
+        tl.from(
+          bottom.querySelectorAll(".slide-in-up"),
+          slideInUp,
+          sectionStagger
+        );
+      }
+    });
+  }
+
+  // * GENERAL GSAP INTRO ANIMATIONS
+  const textH1 = new SplitType("h1");
+  const textH2 = new SplitType("h2");
+  const sections = gsap.utils.toArray(".gsap-section");
+
+  sections.forEach((section) => {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top top+=" + window.innerHeight * 0.95,
+        // 				markers: true,
+      },
+      defaults: {
+        duration: 1,
+        ease: "power2",
+        stagger: 0.25,
+      },
+    });
+    let hero_headers = section.querySelectorAll("h1");
+    let headers = section.querySelectorAll("h2");
+    let paragraphs = section.querySelectorAll(".p");
+    let slide_in_ups = section.querySelectorAll(".slide-in-up");
+    let slide_in_lefts = section.querySelectorAll(".slide-in-left");
+    let buttons = section.querySelectorAll("a");
+    let list = section.querySelectorAll("li");
+
+    if (hero_headers.length > 0) {
+      hero_headers.forEach((hero_header) => {
+        let lines = hero_header.querySelectorAll(".line");
+        lines.forEach((line, i) => {
+          let letters = line.querySelectorAll(".char");
+          tl.from(
+            letters,
+            {
+              opacity: 0,
+              y: "1.5em",
+              duration: 0.85,
+              ease: "power2.out",
+              delay: i * 0.2,
+              stagger: 0,
+            },
+            "<"
+          );
+        });
+      });
+    }
+
+    if (headers.length > 0) {
+      headers.forEach((header) => {
+        let lines = header.querySelectorAll(".line");
+        lines.forEach((line, i) => {
+          let letters = line.querySelectorAll(".char");
+          tl.from(
+            letters,
+            {
+              opacity: 0,
+              y: "1.5em",
+              duration: 0.85,
+              ease: "power2.out",
+              delay: i * 0.2,
+              stagger: 0,
+            },
+            "<"
+          );
+        });
+      });
+    }
+
+    if (slide_in_lefts.length > 0) {
+      tl.fromTo(
+        slide_in_lefts,
+        {
+          opacity: 0,
+          x: "5em",
+        },
+        {
+          opacity: 1,
+          x: "0em",
+          duration: 1.5,
+          ease: "elastic.out(1,0.9)",
+        },
+        "<+=0.25"
+      );
+    }
+
+    if (paragraphs.length > 0) {
+      tl.from(
+        paragraphs,
+        {
+          opacity: 0,
+        },
+        ">-=0.5"
+      );
+    }
+    if (list.length > 0) {
+      tl.from(
+        list,
+        {
+          opacity: 0,
+          x: "3em",
+          // 					ease: "elastic.out(1,0.5)",
+        },
+        ">-=0.5"
+      );
+    }
+
+    if (buttons.length > 0) {
+      tl.fromTo(
+        buttons,
+        {
+          opacity: 0,
+          x: "-3em",
+        },
+        {
+          opacity: 1,
+          x: "0em",
+          ease: "elastic.out(1,0.5)",
+        },
+        ">-=0.5"
+      );
+    }
+
+    if (slide_in_ups.length > 0) {
+      tl.fromTo(
+        slide_in_ups,
+        {
+          opacity: 0,
+          y: 100,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          // 				duration: 1.5,
+        },
+        "<+=0.25"
+      );
+    }
+  });
+
+  // ARROWS
+  const arrow_containers = gsap.utils.toArray(".arrow-container");
+
+  if (arrow_containers) {
+    arrow_containers.forEach((arrow_container) => {
+      let arrow = arrow_container.querySelectorAll(".arrow-single");
+      gsap.fromTo(
+        arrow,
+        {
+          y: (i) => -0.5 + "em",
+        },
+        {
+          y: (i) => i / 3 + "em",
+          duration: 0.5,
+          stagger: 0.1,
+          repeat: -1,
+          yoyo: true,
+        }
+      );
+    });
+  }
+</script>

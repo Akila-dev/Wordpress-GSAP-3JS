@@ -1,0 +1,68 @@
+:root {
+  --brand: #d6f246;
+  --accent: #1d1375;
+  --accent2: #3d2dc8;
+  --white: #ffffff;
+  --dark: #050218;
+  --neutral: #aeb2cb;
+  --card: #eceaff;
+  --body: #28282c;
+}
+
+*,
+html,
+body {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  padding: 5rem;
+  background: var(--dark);
+}
+
+/* ! FOR */
+.wrapper {
+  width: 450px;
+  height: 50px;
+  position: relative;
+  margin: auto;
+  background: #ccc;
+  overflow: hidden;
+}
+
+.wrapper::after {
+  width: 448px;
+  height: 48px;
+  content: "";
+  position: absolute;
+  border: solid 1px white;
+}
+
+.box {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  background: red;
+  font-size: 25px;
+  line-height: 50px;
+  text-align: center;
+  color: var(--color-just-black);
+}
+
+.boxes {
+  position: relative;
+  /* left: -50px; */
+}
+
+.nav {
+  position: relative;
+  text-align: center;
+
+  color: white;
+  font-size: 20px;
+  margin: 20px 0;
+}

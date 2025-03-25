@@ -5,7 +5,9 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { MeshSurfaceSampler } from "three/addons/math/MeshSurfaceSampler.js";
 
-const model_file = "./models/scene4.glb";
+const model_file = "./models/scene3.glb";
+var morphing_particles_color = "#3d2dc8";
+
 const canvas = document.querySelector("#globe-canvas");
 var renderer, camera, scene, controls, texture_loader;
 var dLight;
@@ -77,6 +79,22 @@ function init() {
 
   window.addEventListener("resize", onWindowResize, false);
   window.addEventListener("mousemove", onMouseMove);
+  window.addEventListener(
+    "load",
+    function () {
+      // Check if the code has been executed before
+      if (!("hasCodeRunBefore" in localStorage)) {
+        document.body.style.overflow = "hidden";
+
+        setTimeout(() => {
+          document.body.style.overflow = "scroll";
+        }, 7000);
+
+        localStorage.setItem("hasCodeRunBefore", "true");
+      }
+    },
+    false
+  );
 }
 
 // ! MODEL
@@ -206,21 +224,31 @@ function initMorphingParticles(model_array) {
 
   geometry.setAttribute(
     "position",
-    new THREE.BufferAttribute(spherePosArray, 3)
+    new THREE.BufferAttribute(
+      !localStorage.getItem("firstTimeLoad") ? shipPosArray : spherePosArray,
+      3
+    )
   );
 
   // * MATERIAL
   const material = new THREE.PointsMaterial({
-    color: "white",
+    color: morphing_particles_color,
     size: 2,
     // depthTest: false,
   });
 
   // * MESH
   morphingMesh = new THREE.Points(geometry, material);
-  morphingMesh.rotation.set(degToRad(-45), 0, degToRad(90));
-  morphingMesh.position.set(0, 0, 0);
-  morphingMesh.scale.set(1, 1, 1);
+
+  if (!localStorage.getItem("firstTimeLoad")) {
+    morphingMesh.rotation.set(degToRad(-90), 0, degToRad(0));
+    morphingMesh.position.set(0, 50, -50);
+    morphingMesh.scale.set(1, 1, 1);
+  } else {
+    morphingMesh.rotation.set(degToRad(-45), 0, degToRad(90));
+    morphingMesh.position.set(0, 0, 0);
+    morphingMesh.scale.set(1, 1, 1);
+  }
   morphingMesh.name = "Morphing Mesh";
 
   // * GROUP
@@ -309,107 +337,8 @@ function gsapAnimate() {
   };
 
   if (morphingMesh) {
-    tl.to(morphingProps, {
-      scale: 1,
-      xRot: degToRad(0),
-      yRot: degToRad(0),
-      zRot: degToRad(0),
-      duration: 1,
-      ease: "power2",
-      onUpdate: function () {
-        morphingMesh.scale.set(
-          morphingProps.scale,
-          morphingProps.scale,
-          morphingProps.scale
-        );
-        morphingMesh.rotation.set(
-          morphingProps.xRot,
-          morphingProps.yRot,
-          morphingProps.zRot
-        );
-      },
-    })
-      .to(
-        morphingMesh.geometry.attributes.position.array,
-        {
-          endArray: flatSpherePosArray,
-          duration: 4,
-          ease: "power2.out",
-          onUpdate: () => {
-            morphingMesh.geometry.attributes.position.needsUpdate = true;
-            camera.lookAt(morphingMesh.position);
-            renderer.render(scene, camera);
-          },
-        },
-        "<"
-      )
-      .to(
-        morphingProps,
-        {
-          scale: 1,
-          xRot: degToRad(-45),
-          yRot: degToRad(0),
-          zRot: degToRad(0),
-          xPos: 0,
-          yPos: 0,
-          zPos: -150,
-          duration: 2,
-          ease: "power2.in",
-          onUpdate: function () {
-            morphingMesh.rotation.set(
-              morphingProps.xRot,
-              morphingProps.yRot,
-              morphingProps.zRot
-            );
-            morphingMesh.position.set(
-              morphingProps.xPos,
-              morphingProps.yPos,
-              morphingProps.zPos
-            );
-          },
-        },
-        ">-2"
-      )
-      .to(
-        morphingProps,
-        {
-          scale: 1,
-          xRot: degToRad(-90),
-          zRot: degToRad(0),
-          yPos: 50,
-          duration: 2,
-          ease: "power2.out",
-          onUpdate: function () {
-            morphingMesh.scale.set(
-              morphingProps.scale,
-              morphingProps.scale,
-              morphingProps.scale
-            );
-            morphingMesh.rotation.set(
-              morphingProps.xRot,
-              0,
-              morphingProps.zRot
-            );
-            morphingMesh.position.set(0, morphingProps.yPos, 0);
-          },
-        },
-        ">"
-      )
-      .to(
-        morphingMesh.geometry.attributes.position.array,
-        {
-          endArray: shipPosArray,
-          duration: 3,
-          ease: "power2.out",
-          onUpdate: () => {
-            morphingMesh.geometry.attributes.position.needsUpdate = true;
-            camera.lookAt(morphingMesh.position);
-            renderer.render(scene, camera);
-          },
-        },
-        "<"
-      )
-      .to(
+    if (!localStorage.getItem("firstTimeLoad")) {
+      tl.to(
         morphingProps,
         {
           zRot: degToRad(360),
@@ -422,6 +351,207 @@ function gsapAnimate() {
         },
         ">-1"
       );
+
+      gsap.registerPlugin(ScrollTrigger);
+      const st = gsap.timeline({
+        // yes, we can add it to an entire timeline!
+        scrollTrigger: {
+          trigger: ".container",
+          start: "top top",
+          end: "bottom center",
+          // endTrigger: ".end",
+          scrub: true,
+          markers: true,
+        },
+      });
+
+      let morphingGProps = {
+        scale: 0,
+        xPos: 0,
+        yPos: 0,
+        zPos: 0,
+        xRot: degToRad(0),
+        yRot: degToRad(0),
+        zRot: degToRad(degToRad(0)),
+      };
+
+      st.to(morphingGProps, {
+        xPos: 0,
+        yPos: 1000,
+        zPos: 10,
+        xRot: degToRad(90),
+        // zRot: degToRad(-90),
+        onUpdate: function () {
+          morphingGroup.position.set(
+            morphingGProps.xPos,
+            morphingGProps.yPos,
+            morphingGProps.zPos
+          );
+          morphingGroup.rotation.set(
+            morphingGProps.xRot,
+            morphingGProps.yRot,
+            morphingGProps.zRot
+          );
+        },
+      });
+    } else {
+      tl.to(morphingProps, {
+        scale: 1,
+        xRot: degToRad(0),
+        yRot: degToRad(0),
+        zRot: degToRad(0),
+        duration: 1,
+        ease: "power2",
+        onUpdate: function () {
+          morphingMesh.scale.set(
+            morphingProps.scale,
+            morphingProps.scale,
+            morphingProps.scale
+          );
+          morphingMesh.rotation.set(
+            morphingProps.xRot,
+            morphingProps.yRot,
+            morphingProps.zRot
+          );
+        },
+      })
+        .to(
+          morphingMesh.geometry.attributes.position.array,
+          {
+            endArray: flatSpherePosArray,
+            duration: 4,
+            ease: "power2.out",
+            onUpdate: () => {
+              morphingMesh.geometry.attributes.position.needsUpdate = true;
+              camera.lookAt(morphingMesh.position);
+              renderer.render(scene, camera);
+            },
+          },
+          "<"
+        )
+        .to(
+          morphingProps,
+          {
+            scale: 1,
+            xRot: degToRad(-45),
+            yRot: degToRad(0),
+            zRot: degToRad(0),
+            xPos: 0,
+            yPos: 0,
+            zPos: -150,
+            duration: 2,
+            ease: "power2.in",
+            onUpdate: function () {
+              morphingMesh.rotation.set(
+                morphingProps.xRot,
+                morphingProps.yRot,
+                morphingProps.zRot
+              );
+              morphingMesh.position.set(
+                morphingProps.xPos,
+                morphingProps.yPos,
+                morphingProps.zPos
+              );
+            },
+          },
+          ">-2"
+        )
+        .to(
+          morphingProps,
+          {
+            scale: 1,
+            xRot: degToRad(-90),
+            zRot: degToRad(0),
+            yPos: 50,
+            duration: 2,
+            ease: "power2.out",
+            onUpdate: function () {
+              morphingMesh.scale.set(
+                morphingProps.scale,
+                morphingProps.scale,
+                morphingProps.scale
+              );
+              morphingMesh.rotation.set(
+                morphingProps.xRot,
+                0,
+                morphingProps.zRot
+              );
+              morphingMesh.position.set(0, morphingProps.yPos, 0);
+            },
+          },
+          ">"
+        )
+        .to(
+          morphingMesh.geometry.attributes.position.array,
+          {
+            endArray: shipPosArray,
+            duration: 3,
+            ease: "power2.out",
+            onUpdate: () => {
+              morphingMesh.geometry.attributes.position.needsUpdate = true;
+              camera.lookAt(morphingMesh.position);
+              renderer.render(scene, camera);
+            },
+          },
+          "<"
+        )
+        .to(
+          morphingProps,
+          {
+            zRot: degToRad(360),
+            duration: 8,
+            repeat: -1,
+            ease: "none",
+            onUpdate: function () {
+              morphingMesh.rotation.set(degToRad(-90), 0, morphingProps.zRot);
+            },
+          },
+          ">-1"
+        );
+
+      gsap.registerPlugin(ScrollTrigger);
+      const st = gsap.timeline({
+        // yes, we can add it to an entire timeline!
+        scrollTrigger: {
+          trigger: ".container",
+          start: "top top",
+          end: "bottom center",
+          // endTrigger: ".end",
+          scrub: true,
+          markers: true,
+        },
+      });
+
+      let morphingGProps = {
+        scale: 0,
+        xPos: 0,
+        yPos: 0,
+        zPos: 0,
+        xRot: degToRad(0),
+        yRot: degToRad(0),
+        zRot: degToRad(degToRad(0)),
+      };
+
+      st.to(morphingGProps, {
+        xPos: 0,
+        yPos: 1000,
+        zPos: 10,
+        xRot: degToRad(90),
+        // zRot: degToRad(-90),
+        onUpdate: function () {
+          morphingGroup.position.set(
+            morphingGProps.xPos,
+            morphingGProps.yPos,
+            morphingGProps.zPos
+          );
+          morphingGroup.rotation.set(
+            morphingGProps.xRot,
+            morphingGProps.yRot,
+            morphingGProps.zRot
+          );
+        },
+      });
+    }
   }
 }
 
