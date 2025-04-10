@@ -1,0 +1,256 @@
+:root {
+  --floating-card-w: 17vw;
+  --floating-card-h: 25vw;
+  --floating-card-perspective: 10vw;
+  --floating-card-far: -2vw;
+  --floating-card-near: -1vw;
+}
+
+/* ! FLOATING MOUSE FOLLOW CARDS START */
+.floating-cards-container {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+.floating-cards-scene {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  /* overflow: clip; */
+
+  perspective: var(--floating-card-perspective);
+  transform-style: preserve-3d;
+  z-index: -1;
+}
+.floating-cards-scene .floating-card {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  width: var(--floating-card-w);
+  height: var(--floating-card-h);
+  transform-style: preserve-3d;
+
+  filter: sepia(20%) grayscale(50%);
+  /* filter: contrast(50%); */
+  /* filter: grayscale(50%); */
+
+  /* height: auto; */
+  /* max-height: ; */
+}
+
+.floating-cards-scene img,
+.floating-card *,
+.scrolling-floating-card img,
+.scrolling-floating-card * {
+  width: 100%;
+  /* height: auto; */
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.floating-cards-scene .floating-card:nth-child(1) {
+  left: -5vw;
+  top: -5vw;
+  height: calc(var(--floating-card-h) * 0.95);
+}
+
+.floating-cards-scene .floating-card:nth-child(2) {
+  left: 5vw;
+  top: 50vh;
+  width: calc(var(--floating-card-w) * 1.1);
+  height: calc(var(--floating-card-h) * 0.9);
+}
+
+.floating-cards-scene .floating-card:nth-child(3) {
+  left: 27.5vw;
+  top: -15vh;
+  height: calc(var(--floating-card-h) * 0.8);
+}
+
+.floating-cards-scene .floating-card:nth-child(4) {
+  left: 30vw;
+  top: 75vh;
+  width: calc(var(--floating-card-w) * 0.9);
+  height: calc(var(--floating-card-h) * 0.6);
+}
+
+.floating-cards-scene .floating-card:nth-child(5) {
+  right: 30vw;
+  bottom: 70vh;
+  width: calc(var(--floating-card-w) * 0.9);
+  height: calc(var(--floating-card-h) * 0.8);
+}
+
+.floating-cards-scene .floating-card:nth-child(6) {
+  right: 27.5vw;
+  top: 75vh;
+  width: calc(var(--floating-card-w) * 1);
+  height: calc(var(--floating-card-h) * 0.7);
+}
+
+.floating-cards-scene .floating-card:nth-child(7) {
+  right: 5vw;
+  top: 10vh;
+}
+
+.floating-cards-scene .floating-card:nth-child(8) {
+  right: -5vw;
+  top: 65vh;
+  width: calc(var(--floating-card-w) * 1.2);
+  height: calc(var(--floating-card-h) * 0.9);
+}
+
+.floating-cards-scene .floating-card:nth-child(9) {
+  left: 95vw;
+  bottom: 75vh;
+  width: calc(var(--floating-card-w) * 1);
+  height: calc(var(--floating-card-h) * 0.8);
+}
+
+.floating-cards-scene .fc-far {
+  transform: translateZ(var(--floating-card-far));
+}
+
+.floating-cards-scene .fc-near {
+  transform: translateZ(var(--floating-card-near));
+}
+
+/* ! FLOATING SCROLLING CARD START */
+
+.scrolling-floating-card-endpoint {
+  min-height: 100vh !important;
+  height: 100vh;
+  width: 100%;
+
+  perspective: var(--floating-card-perspective);
+  transform-style: preserve-3d;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.scrolling-floating-card {
+  transform-style: preserve-3d;
+  filter: sepia(20%) grayscale(50%);
+  transform: translate3d(87vw, -10vw, -9vw);
+}
+/* ! FLOATING SCROLLING CARD END */
+/* ! FLOATING MOUSE FOLLOW CARDS END */
+
+@media screen and (max-width: 1024px) {
+  :root {
+    --floating-card-w: 13em;
+    --floating-card-h: 20em;
+    --floating-card-perspective: 10em;
+    --floating-card-far: -2em;
+    --floating-card-near: -1em;
+  }
+
+  .floating-cards-scene .floating-card:nth-child(1) {
+    left: -2em;
+    top: -2em;
+  }
+
+  .floating-cards-scene .floating-card:nth-child(2) {
+    left: -5vw;
+    top: 60vh;
+    width: calc(var(--floating-card-w) * 0.9);
+  }
+
+  .floating-cards-scene .floating-card:nth-child(3) {
+    left: 50vw;
+    bottom: 87.5vh;
+    height: calc(var(--floating-card-h) * 0.8);
+  }
+
+  .floating-cards-scene .floating-card:nth-child(4) {
+    left: 36.5vw;
+    top: 70vh;
+    width: calc(var(--floating-card-w) * 0.9);
+    height: calc(var(--floating-card-h) * 0.6);
+  }
+
+  .floating-cards-scene .floating-card:nth-child(5) {
+    left: 80vw;
+    bottom: 62vh;
+    width: calc(var(--floating-card-w) * 1);
+    height: calc(var(--floating-card-h) * 0.6);
+  }
+
+  .floating-cards-scene .floating-card:nth-child(6) {
+    left: 50vw;
+    top: 105vh;
+    width: calc(var(--floating-card-w) * 1.3);
+    height: calc(var(--floating-card-h) * 0.6);
+  }
+
+  /* ! SCROLL CARD */
+  .floating-cards-scene .floating-card:nth-child(7) {
+    right: -10vw;
+    top: 65vh;
+    height: calc(var(--floating-card-h) * 0.9);
+  }
+
+  .floating-cards-scene .floating-card:nth-child(8),
+  .floating-cards-scene .floating-card:nth-child(9) {
+    top: -100vh;
+    left: -100vw;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  :root {
+    --floating-card-w: 42vw;
+    --floating-card-h: 70vw;
+    --floating-card-perspective: 50vw;
+
+    --floating-card-far: -10vw;
+    --floating-card-near: -5vw;
+  }
+
+  .floating-cards-scene .floating-card:nth-child(1) {
+    left: -10vw;
+    top: -20vw;
+  }
+
+  .floating-cards-scene .floating-card:nth-child(2) {
+    left: -10vw;
+    top: 50vh;
+    width: calc(var(--floating-card-w) * 1);
+    height: calc(var(--floating-card-h) * 0.8);
+  }
+
+  .floating-cards-scene .floating-card:nth-child(3) {
+    left: 55vw;
+    bottom: 65vh;
+    height: calc(var(--floating-card-h) * 0.8);
+  }
+
+  .floating-cards-scene .floating-card:nth-child(4) {
+    left: 25vw;
+    top: 90vh;
+    width: calc(var(--floating-card-w) * 0.9);
+    height: calc(var(--floating-card-h) * 0.6);
+  }
+
+  /* ! SCROLL CARD */
+  .floating-cards-scene .floating-card:nth-child(7) {
+    right: -15vw;
+    top: 65vh;
+    height: calc(var(--floating-card-h) * 0.8);
+  }
+
+  .floating-cards-scene .floating-card:nth-child(5),
+  .floating-cards-scene .floating-card:nth-child(6),
+  .floating-cards-scene .floating-card:nth-child(8),
+  .floating-cards-scene .floating-card:nth-child(9) {
+    top: -100vh;
+    left: -100vw;
+  }
+}

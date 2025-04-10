@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="scroll-display-cards.css" />
+    <link rel="stylesheet" href="infinite-slider.css" />
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="#">upgrade your browser</a> to improve your experience.
+      </p>
+    <![endif]-->
+    <div class="noise"></div>
+
+    <div>
+      <canvas id="canvas"></canvas>
+      <div
+        style="background: var(--dark-grad-2)"
+        class="container h-screen flex-center"
+      >
+        Hi
+      </div>
+
+      <!-- ! SCROLL display CARDS START -->
+      <div
+        class="scroll_display_cards-section min-h-screen flex-center overflow-visible container-x"
+      >
+        <div class="flex-sm-lg">
+          <!-- ! text -->
+          <div class="gsap_text-container flex-sm">
+            <h1>Un'oasi di lusso sul mare di Milano Marittima</h1>
+            <p>
+              Eleganza, esclusività e sapore mediterraneo. Il Beach Club di
+              Marepineta Resort è il luogo dove le giornate si trasformano in
+              esperienze indimenticabili, tra momenti di relax, piatti d'autore
+              e serate dal fascino unico, raccontate attraverso immagini,
+              grafiche e motion design pensati per dare vita alla stagione
+              estiva.
+            </p>
+          </div>
+          <!-- ! images -->
+          <div class="flex-lg scroll_display_cards-container-h">
+            <div class="scroll_display_cards-container flex-center">
+              <div class="sdc-card">
+                <img src="./assets/1.png" />
+              </div>
+              <div class="sdc-card">
+                <img src="./assets/2.png" />
+              </div>
+              <div class="sdc-card">
+                <img src="./assets/3.png" />
+              </div>
+              <div class="sdc-card">
+                <img src="./assets/4.png" />
+              </div>
+              <div class="sdc-card">
+                <img src="./assets/5.png" />
+              </div>
+              <div class="sdc-card">
+                <img src="./assets/6.png" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ! SCROLL display CARDS END -->
+
+      <!-- ! INFINITE AUTO SCROLL START -->
+      <div class="container h-screen flex-center">
+        <div class="grid-2 gsap_text-container">
+          <h1>La passione per il Prosecco, dal cuore di Valdobbiadene</h1>
+          <p>
+            Un'azienda che custodisce il sapere della tradizione e lo trasforma
+            in eccellenza. Dai vigneti alle bollicine, Cantine Vedova racconta
+            l'autenticità del territorio con uno stile raffinato, sostenuto da
+            un'identità visiva che abbiamo curato per rispecchiare la qualità
+            del prodotto e della tradizione.
+          </p>
+        </div>
+        <!-- ! SLIDER -->
+        <div class="slide-track">
+          <div class="slider-card slider-card-size">
+            <img src="./assets/1.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/2.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/3.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/4.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/5.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/6.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/1.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/2.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/3.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/4.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/5.png" />
+          </div>
+          <div class="slider-card slider-card-size">
+            <img src="./assets/6.png" />
+          </div>
+        </div>
+      </div>
+      <!-- ! INFINITE AUTO SCROLL END -->
+
+      <div class="h-screen">Hi</div>
+    </div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://esm.sh/three",
+          "three/": "https://esm.sh/three/",
+          "dat": "https://cdn.skypack.dev/dat.gui",
+          "animejs": "https://cdn.skypack.dev/animejs@3.2.1",
+          "splitjs": "https://cdn.skypack.dev/spltjs@1.0.8"
+        }
+      }
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"
+      async
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"
+      async
+      defer
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/letterizejs@2.0.1/lib/letterize.min.js"></script>
+    <!-- Minified UMD bundle -->
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="gsap.js" type="module" async defer></script>
+    <script src="infinite-slider.js" type="module" async defer></script>
+    <!-- <script src="test.js" type="module" async defer></script> -->
+  </body>
+</html>

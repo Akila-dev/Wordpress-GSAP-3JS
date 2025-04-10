@@ -1,0 +1,78 @@
+:root {
+  --sdc-w: 26%;
+  --sdc-h: 37%;
+  --sdc-w-sm: calc(var(--sdc-w) * 0.8);
+  --sdc-h-sm: calc(var(--sdc-h) * 0.8);
+  --sdc-h-md: calc(var(--sdc-h) * 0.9);
+  --sdc-w-lg: calc(var(--sdc-w) * 1.3);
+  --sdc-h-lg: calc(var(--sdc-h) * 1.1);
+  --sdc-h-xs: calc(var(--sdc-h) * 0.7);
+}
+
+.scroll_display_cards-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.sdc-card {
+  width: var(--sdc-w);
+  height: var(--sdc-h);
+  position: absolute;
+  /* opacity: 0.8; */
+}
+.sdc-card img,
+.sdc-card * {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(1) {
+  top: 10%;
+  left: 0%;
+  z-index: 2;
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(2) {
+  top: 55%;
+  left: 3%;
+  width: var(--sdc-w-sm);
+  height: var(--sdc-h-sm);
+}
+.scroll_display_cards-container .sdc-card:nth-child(3) {
+  top: 0%;
+  left: 35%;
+  width: var(--sdc-w-lg);
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(4) {
+  top: 65%;
+  left: 38%;
+  height: var(--sdc-h-sm);
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(5) {
+  top: 33%;
+  left: 77%;
+  width: var(--sdc-w-sm);
+  height: var(--sdc-h-md);
+  z-index: 2;
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(6) {
+  top: 72%;
+  left: 71%;
+  width: var(--sdc-w-sm);
+  height: var(--sdc-h-xs);
+}
+
+@media screen and (max-width: 1023px) {
+}
+
+@media screen and (max-width: 767px) {
+  :root {
+    --sdc-w: 30%;
+    --sdc-h: 37%;
+  }
+}

@@ -11,6 +11,7 @@
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="floating-cards.css" />
   </head>
   <body>
     <!--[if lt IE 7]>
@@ -19,121 +20,83 @@
         <a href="#">upgrade your browser</a> to improve your experience.
       </p>
     <![endif]-->
-    <div class="container">
-      <div class="canvas-stick">
-        <div class="canvas-sticky">
-          <canvas id="globe-canvas"></canvas>
-        </div>
+    <div class="noise"></div>
+
+    <div>
+      <canvas id="canvas"></canvas>
+      <div style="background: var(--bg)" class="container h-screen flex-center">
+        Hi
       </div>
-      <div class="content-container">
-        <div style="height: 100vh" class="flex-center">
-          <h1 class="h1">HELLO</h1>
-          <h1>
-            MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING? MY ANGEL
-            HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING?
-          </h1>
-          <p>MY ANGEL HOW'RE YOU DOING?</p>
-        </div>
 
-        <div style="background-color: white">
-          <div
-            style="height: 100vh; background-color: white"
-            class="flex-center"
-          >
-            <div class="arrow-container">
-              <div class="arrow-single"></div>
-              <div class="arrow-single"></div>
-              <div class="arrow-single"></div>
-            </div>
-          </div>
-
-          <!-- * ALL GSAP SECTION TAGS -->
-          <div
-            style="height: 100vh; background-color: black"
-            class="flex-center gsap-section"
-          >
-            <h2>MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING?</h2>
-            <p class="p" style="color: white">
-              MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING? MY ANGEL
-              HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING?
-            </p>
-            <a href="#">Click Me</a>
-            <div class="grid-4">
-              <div class="slide-in-up box"></div>
-              <div class="slide-in-up box"></div>
-              <div class="slide-in-up box"></div>
-              <div class="slide-in-up box"></div>
-            </div>
-          </div>
-
-          <!-- * GSAP SECTION TAGS MINUS - BUTTON -->
-          <div
-            style="height: 100vh; background-color: black"
-            class="flex-center gsap-section"
-          >
-            <h2>MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING?</h2>
-            <p class="p" style="color: white">
-              MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING? MY ANGEL
-              HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING?
-            </p>
-            <div class="grid-4">
-              <div class="slide-in-up box"></div>
-              <div class="slide-in-up box"></div>
-              <div class="slide-in-up box"></div>
-              <div class="slide-in-up box"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
+      <!-- FLOATING CARDS START -->
+      <div
+        id="floating-cards-section"
+        class="h-screen flex-center overflow-visible relative"
+      >
+        <!-- TEXT CONTENTS START -->
         <div
-          style="height: 100vh; background-color: purple"
-          class="flex-center"
+          style="position: absolute; top: 0; left: 0; width: 100%"
+          class="text-center h-screen flex-center"
         >
-          <h2>
-            MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING? MY ANGEL
-            HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING?
-          </h2>
-        </div>
-      </div>
-      <!-- * GSAP SCROLL SLIDER -->
-      <div style="height: 100vh; background-color: blue" class="flex-center">
-        <div class="flex-col scroll-slider-container">
-          <h2>MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING?</h2>
-          <div class="flex-no-wrap scroll-slider">
-            <div class="slide-card">1</div>
-            <div class="slide-card">2</div>
-            <div class="slide-card">3</div>
-            <div class="slide-card">4</div>
-            <div class="slide-card">5</div>
-            <div class="slide-card">6</div>
-            <div class="slide-card">7</div>
-            <div class="slide-card">8</div>
-            <div class="slide-card">9</div>
+          <div class="max-w">
+            <h1>Elevate your brand with flavorful touch.</h1>
+            <a href="#" class="btn gsap-btn">Learn More</a>
           </div>
         </div>
-      </div>
+        <!-- TEXT CONTENT END -->
 
-      <!-- * MOTION PATH -->
-      <div style="height: 100vh; background-color: black" class="flex-col">
-        <div class="flex-center h-auto text-center w-full curve-animate">
-          <h2>MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING?</h2>
-          <p class="t-w">
-            MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING? MY ANGEL
-            HOW'RE YOU DOING? MY ANGEL HOW'RE YOU DOING? MY ANGEL HOW'RE YOU
-            DOING? MY ANGEL HOW'RE YOU DOING?
-          </p>
+        <!-- CARDS START -->
+        <div class="floating-cards-container">
+          <div class="floating-cards-scene">
+            <div class="floating-card fc-far"><img src="./assets/1.png" /></div>
+            <div class="floating-card fc-near">
+              <img src="./assets/2.png" />
+            </div>
+            <div class="floating-card fc-near">
+              <img src="./assets/3.png" />
+            </div>
+            <div class="floating-card fc-far"><img src="./assets/4.png" /></div>
+            <div class="floating-card fc-near">
+              <img src="./assets/5.png" />
+            </div>
+            <div class="floating-card fc-near">
+              <img src="./assets/6.png" />
+            </div>
+            <div class="floating-card fc-far floating-card-sticky">
+              <img src="./assets/1.png" />
+            </div>
+            <div class="floating-card fc-near">
+              <img src="./assets/2.png" />
+            </div>
+            <div class="floating-card fc-near">
+              <img src="./assets/3.png" />
+            </div>
+          </div>
         </div>
-        <svg viewBox="0 0 500 500">
-          <path
-            id="curve"
-            d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97"
-          />
-          <text width="500" class="t-w">
-            <textPath xlink:href="#curve">Dangerous Curves Ahead</textPath>
-          </text>
-        </svg>
+        <!-- CARDS END -->
+
+        <!-- SCROLL CARD ENDPOINT START -->
+        <!-- <div
+          class="scrolling-floating-card-endpoint h-screen container flex-center-row"
+        >
+          <div class="scrolling-floating-card">
+            <img src="./assets/1.png" />
+          </div>
+          <div class="text-container">
+            <h2>Eleganza, innovazione</h2>
+            <p>
+              Abbiamo trasformato l'eleganza e l'innovazione di un colosso
+              dell'eyewear in un racconto visivo mozzafiato, dando vita alle
+              collezioni dei brand più iconici attraverso una serie di video che
+              esaltano stile, carattere e unicità.
+            </p>
+          </div>
+        </div> -->
+        <!-- SCROLL CARD ENDPOINT END -->
       </div>
+      <!-- FLOATING CARDS END -->
+
+      <div class="h-screen">Hi</div>
     </div>
 
     <script type="importmap">
@@ -160,8 +123,7 @@
     <script src="https://cdn.jsdelivr.net/npm/letterizejs@2.0.1/lib/letterize.min.js"></script>
     <!-- Minified UMD bundle -->
     <script src="https://unpkg.com/split-type"></script>
-    <!-- <script src="script.js" type="module" async defer></script> -->
-    <script src="gsap.js" type="module" async defer></script>
-    <!-- <script src="export2.js" type="module" async defer></script> -->
+    <script src="floating_cards.js" type="module" async defer></script>
+    <!-- <script src="test.js" type="module" async defer></script> -->
   </body>
 </html>
