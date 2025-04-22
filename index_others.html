@@ -24,7 +24,7 @@
     <div class="noise"></div>
 
     <div>
-      <canvas id="canvas"></canvas>
+      <canvas id="canvas_3d"></canvas>
       <div
         style="background: var(--dark-grad-2)"
         class="container h-screen flex-center"
@@ -77,7 +77,7 @@
       <!-- ! SCROLL display CARDS END -->
 
       <!-- ! INFINITE AUTO SCROLL START -->
-      <div class="container h-screen flex-center">
+      <div id="gsap_particles-trigger" class="container h-screen flex-center">
         <div class="grid-2 gsap_text-container">
           <h1>La passione per il Prosecco, dal cuore di Valdobbiadene</h1>
           <p>
@@ -88,6 +88,7 @@
             del prodotto e della tradizione.
           </p>
         </div>
+        <div style="height: 300px; width: 100%"></div>
         <!-- ! SLIDER -->
         <div class="slide-track">
           <div class="slider-card slider-card-size">
@@ -159,6 +160,7 @@
     <script src="https://unpkg.com/split-type"></script>
     <script src="gsap.js" type="module" async defer></script>
     <script src="infinite-slider.js" type="module" async defer></script>
-    <!-- <script src="test.js" type="module" async defer></script> -->
+    <script src="three_js.js" type="module" async defer></script>
+    <!-- <script src="sphere.js" type="module" async defer></script> -->
   </body>
 </html>

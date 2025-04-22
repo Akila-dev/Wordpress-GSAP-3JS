@@ -2,8 +2,13 @@
 function sdc_func() {
   const sdc_container = gsap.utils.toArray(".scroll_display_cards-container");
 
+  if (!sdc_container || sdc_container.length < 1) {
+    return;
+  }
+
   sdc_container.forEach((sdc) => {
     const cards = sdc.querySelectorAll(".sdc-card");
+    const text = sdc.querySelectorAll(".sdc-text");
 
     const p_max = 100;
     const p_min = 0;
@@ -53,50 +58,116 @@ function sdc_func() {
         "<"
       );
     });
+
+    text.forEach((txt, i) => {
+      tl.from(
+        txt,
+        {
+          opacity: 0,
+        },
+        "<"
+      );
+    });
   });
+}
+
+// 	! TEXT ANIMATION FUNCTION
+function animateText(element, target, type) {
+  // SHARED ANIMATION
+  const duration = 1;
+  const ease = "power2";
+  const stagger = 0.05;
+
+  // SCROLL TRIGGER CONSTANTS
+  const start = "top bottom";
+  const end = "top top";
+  const scrub = 1;
+
+  // 		ANIMATION
+  if (type === "h") {
+    gsap.from(target, {
+      scrollTrigger: {
+        trigger: element,
+        start: start,
+        end: end,
+        scrub: scrub,
+      },
+      opacity: 0,
+      y: "10vh",
+      duration: duration,
+      ease: ease,
+      stagger: stagger,
+    });
+  } else {
+    gsap.from(target, {
+      scrollTrigger: {
+        trigger: element,
+        start: start,
+        end: end,
+        scrub: scrub,
+      },
+      opacity: 0,
+      y: "15vh",
+      duration: duration,
+      ease: ease,
+      stagger: stagger,
+    });
+  }
 }
 
 // ! TEXT FUNCTION
 function text_func() {
   const gt_container = gsap.utils.toArray(".gsap_text-container");
 
+  if (!gt_container || gt_container.length < 1) {
+    return;
+  }
+
   const textH1 = new SplitType(".gsap_text-container h1");
   const textH2 = new SplitType(".gsap_text-container h2");
+  const textH3 = new SplitType(".gsap_text-container h3");
+  const textH4 = new SplitType(".gsap_text-container h4");
   const textP = new SplitType(".gsap_text-container p");
 
   gt_container.forEach((gt) => {
-    // let h1 = gt.querySelectorAll("h1 .line");
-    // let p = gt.querySelectorAll("p .line");
-    let h1 = gt.querySelectorAll("h1");
-    let p = gt.querySelectorAll("p");
-
-    // const tl = gsap.timeline({
-    //   scrollTrigger: {
-    //     trigger: gt,
-    //     start: "top bottom",
-    //     end: "top top",
-    //     scrub: 1,
-    //   },
-    //   defaults: {
-    //     duration: 1,
-    //     ease: "power2",
-    //     stagger: 0.25,
-    //   },
-    // });
+    var h1 = gt.querySelectorAll("h1");
+    var h2 = gt.querySelectorAll("h2");
+    var h3 = gt.querySelectorAll("h3");
+    var h4 = gt.querySelectorAll("h4");
+    var p = gt.querySelectorAll("p");
 
     if (h1.length > 0) {
-      let line = h1.querySelectorAll(".line");
-      gsap.from(h1, {
-        scrollTrigger: {},
-        opacity: 0,
-        yPercent: 100,
+      h1.forEach((element) => {
+        let target = element.querySelectorAll(".word");
+        animateText(element, target, "h");
+      });
+    }
+
+    if (h2.length > 0) {
+      h2.forEach((element) => {
+        let target = element.querySelectorAll(".word");
+        animateText(element, target, "h");
+      });
+    }
+
+    if (h3.length > 0) {
+      h3.forEach((element) => {
+        let target = element.querySelectorAll(".word");
+        animateText(element, target, "h");
+      });
+    }
+
+    if (h4.length > 0) {
+      h4.forEach((element) => {
+        let target = element.querySelectorAll(".word");
+        animateText(element, target, "h");
       });
     }
 
     if (p.length > 0) {
-      tl.from(p, {
-        opacity: 0,
-        yPercent: 100,
+      p.forEach((element) => {
+        let target = element.querySelectorAll(".line");
+        animateText(element, target, "p");
       });
     }
   });

@@ -1,0 +1,320 @@
+:root {
+  --primary: #02091b;
+  --secondary: #403f45;
+  --text: #403f45;
+  --accent: #0547f2;
+  --border: #cfd0d5;
+  --card: #f9f9f9;
+  --white: #ffffff;
+  --gradient-from: #0c7efa;
+  --gradient-to: #0547f2;
+
+  /* 	SCROLL DISPLAY CARDS START */
+  --sdc-w: 26%;
+  --sdc-h: 37%;
+  --sdc-w-sm: calc(var(--sdc-w) * 0.8);
+  --sdc-h-sm: calc(var(--sdc-h) * 0.8);
+  --sdc-h-md: calc(var(--sdc-h) * 0.9);
+  --sdc-w-lg: calc(var(--sdc-w) * 1.3);
+  --sdc-h-lg: calc(var(--sdc-h) * 1.1);
+  --sdc-h-xs: calc(var(--sdc-h) * 0.7);
+  /* 	SCROLL DISPLAY CARDS END */
+}
+
+.elementor-kit-10 p {
+  margin-bottom: 0px !important;
+}
+
+/* COLOR UTILITIES */
+.placeholder-gradient {
+  background: linear-gradient(125deg, #cfd0d50a 30%, #002fffff 150%);
+}
+
+.glassmorphism {
+  --blur: 0.3em;
+  --saturate: 100%;
+  backdrop-filter: blur(var(--blur)) saturate(var(--saturate));
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--saturate));
+  background: #f9f9f95a;
+}
+
+.use-btn-1 button,
+.use-btn-1 a {
+  background: linear-gradient(
+    180deg,
+    var(--gradient-from) 0%,
+    var(--gradient-to) 100%
+  ) !important;
+  color: white !important;
+}
+
+.use-btn-1 button::after,
+.use-btn-1 a::after {
+  --size: 1.8em;
+
+  content: "";
+  background-image: url(https://progrimex.com/wp-content/uploads/2025/04/arrow-right-white.svg);
+  display: inline-block;
+  background-size: contain;
+  background-position: center right;
+  background-repeat: no-repeat;
+  height: var(--size);
+  width: var(--size);
+  margin: -0.49em 0;
+}
+
+/* ! MISC UTILITIES */
+.container,
+.container-x {
+  padding-left: 6em;
+  padding-right: 6em;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.container {
+  padding-top: 6em;
+  padding-bottom: 6em;
+}
+
+.relative {
+  position: relative;
+}
+
+.circle-icons a {
+  position: relative !important;
+  /* 	display:block !important; */
+  z-index: 0;
+  transform: translatex(0.5em);
+}
+
+.circle-icons a::before {
+  --size: 2em;
+  --dis: -0.4em;
+  --dis2: -0.3em;
+
+  content: "";
+  position: absolute;
+  top: var(--dis2);
+  left: var(--dis);
+
+  width: var(--size);
+  height: var(--size);
+  background: var(--white);
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.circle-icons a:hover::before {
+  background: var(--accent);
+}
+
+/* TEXT UTILITIES */
+h1,
+h2,
+h3 {
+  line-height: 1.2 !important;
+}
+
+h4,
+h5 {
+  line-height: 1.25 !important;
+}
+
+p,
+li {
+  line-height: 1.5 !important;
+}
+
+h1 span,
+h2 span {
+  color: var(--accent);
+}
+
+/* 	SCROLL DISPLAY CARDS START */
+.scroll_display_cards-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.sdc-card {
+  width: var(--sdc-w);
+  height: var(--sdc-h);
+  position: absolute;
+  border-radius: 0.5em;
+  overflow: clip;
+  /* opacity: 0.8; */
+}
+.sdc-card img,
+.sdc-card * {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(1) {
+  top: 10%;
+  left: 0%;
+  z-index: 2;
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(2) {
+  top: 55%;
+  left: 3%;
+  width: var(--sdc-w-sm);
+  height: var(--sdc-h-sm);
+}
+.scroll_display_cards-container .sdc-card:nth-child(3) {
+  top: 0%;
+  left: 35%;
+  width: var(--sdc-w-lg);
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(4) {
+  top: 65%;
+  left: 38%;
+  height: var(--sdc-h-sm);
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(5) {
+  top: 33%;
+  left: 77%;
+  width: var(--sdc-w-sm);
+  height: var(--sdc-h-md);
+  z-index: 2;
+}
+/* 	SCROLL DISPLAY CARDS END */
+
+/* !NOISE */
+.noise-static {
+  position: relative;
+}
+.noise-static:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: url("https://progrimex.com/wp-content/uploads/2025/04/noise.png");
+  background-attachment: fixed;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.noise {
+  position: fixed;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+@supports (-webkit-hyphens: none) {
+  .noise {
+    display: none;
+  }
+}
+
+.noise:before {
+  content: "";
+  position: absolute;
+  animation: noise 1.2s steps(3) both infinite;
+  will-change: auto;
+  background-image: url(https://progrimex.com/wp-content/uploads/2025/04/noise.png);
+  background-size: 100px;
+  width: 200%;
+  height: 200%;
+  left: -50%;
+  top: -50%;
+  opacity: 0.3;
+}
+
+@keyframes noise {
+  0% {
+    transform: translate3d(1%, -1%, 0);
+  }
+
+  10% {
+    transform: translate3d(-5%, -2%, 0);
+  }
+
+  20% {
+    transform: translate3d(10%, 5%, 0);
+  }
+
+  30% {
+    transform: translate3d(5%, -11%, 0);
+  }
+
+  40% {
+    transform: translate3d(-12%, -5%, 0);
+  }
+
+  50% {
+    transform: translate3d(10%, 9%, 0);
+  }
+
+  60% {
+    transform: translate3d(15%, 0, 0);
+  }
+
+  70% {
+    transform: translate3d(-10%, 8%, 0);
+  }
+
+  80% {
+    transform: translate3d(10%, 2%, 0);
+  }
+
+  90% {
+    transform: translate3d(1%, 5%, 0);
+  }
+
+  to {
+    transform: translate3d(0, 8%, 0);
+  }
+}
+
+.noise,
+.noise:before,
+.noise:after {
+  box-sizing: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media screen and (max-width: 1240px) {
+  .container,
+  .container-x {
+    padding-left: 5em;
+    padding-right: 5em;
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .container,
+  .container-x {
+    padding-left: 3em;
+    padding-right: 3em;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  :root {
+    --sdc-w: 30%;
+    --sdc-h: 37%;
+  }
+
+  .container,
+  .container-x {
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+  }
+
+  .container {
+    padding-top: 4em;
+    padding-bottom: 4em;
+  }
+}

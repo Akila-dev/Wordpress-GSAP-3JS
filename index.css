@@ -67,7 +67,7 @@ body {
   /* min-height: 100vh !important; */
 }
 
-#canvas {
+#canvas_3d {
   position: fixed;
   top: 0;
   left: 0;
@@ -168,6 +168,10 @@ h2 {
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+}
+
+#gsap_particles-trigger {
+  min-height: 100vh;
 }
 
 /* ! MISC UTILITIES START */

@@ -1,0 +1,299 @@
+<script type="module" async defer>
+  // ! SCROLL DISPLAY CARDS
+  function sdc_func() {
+    const sdc_container = gsap.utils.toArray(".scroll_display_cards-container");
+
+    if (!sdc_container || sdc_container.length < 1) {
+      return;
+    }
+
+    sdc_container.forEach((sdc) => {
+      const cards = sdc.querySelectorAll(".sdc-card");
+      const text = sdc.querySelectorAll(".sdc-text");
+
+      const p_max = 100;
+      const p_min = 0;
+      const start_points = [
+        {
+          x: p_max,
+          y: p_max,
+        },
+        {
+          x: p_max,
+          y: -p_max,
+        },
+        {
+          x: p_min,
+          y: p_max,
+        },
+        {
+          x: p_min,
+          y: -p_max,
+        },
+        {
+          x: -p_max,
+          y: p_max,
+        },
+        {
+          x: -p_max,
+          y: -p_max,
+        },
+      ];
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sdc,
+          start: "top bottom",
+          end: "bottom bottom",
+          scrub: 1,
+        },
+      });
+      cards.forEach((card, i) => {
+        tl.from(
+          card,
+          {
+            xPercent: start_points[i].x,
+            yPercent: start_points[i].y,
+            opacity: 0,
+          },
+          "<"
+        );
+      });
+
+      text.forEach((txt, i) => {
+        tl.from(
+          txt,
+          {
+            opacity: 0,
+          },
+          "<"
+        );
+      });
+    });
+  }
+
+  // 	! TEXT ANIMATION FUNCTION
+  function animateText(element, target, type, no_scrub) {
+    // SHARED ANIMATION
+    const duration = 1;
+    const ease = "power2";
+    const stagger = 0.05;
+
+    // SCROLL TRIGGER CONSTANTS
+    const start = "top bottom";
+    const end = "top 60%";
+    const scrub = no_scrub ? false : 1;
+
+    // 		ANIMATION
+    if (type === "h") {
+      gsap.from(target, {
+        scrollTrigger: {
+          trigger: element,
+          start: start,
+          end: end,
+          scrub: scrub,
+        },
+        opacity: 0,
+        x: "1em",
+        duration: duration,
+        ease: ease,
+        stagger: stagger,
+      });
+    } else {
+      gsap.from(target, {
+        scrollTrigger: {
+          trigger: element,
+          start: start,
+          end: end,
+          scrub: scrub,
+        },
+        opacity: 0,
+        x: "1em",
+        duration: duration,
+        ease: ease,
+        stagger: stagger,
+      });
+    }
+  }
+
+  // ! TEXT FUNCTION
+  function text_func() {
+    const gt_container = gsap.utils.toArray(".gsap-st_text");
+
+    if (!gt_container || gt_container.length < 1) {
+      return;
+    }
+
+    const textH1 = new SplitType(".gsap-st_text h1");
+    const textH2 = new SplitType(".gsap-st_text h2");
+    const textH3 = new SplitType(".gsap-st_text h3");
+    const textH4 = new SplitType(".gsap-st_text h4");
+    const textP = new SplitType(".gsap-st_text p");
+    const textHH1 = new SplitType(".gsap-st_hero h1");
+    const textHP = new SplitType(".gsap-st_hero p");
+
+    gt_container.forEach((gt) => {
+      var h1 = gt.querySelectorAll("h1");
+      var h2 = gt.querySelectorAll("h2");
+      var h3 = gt.querySelectorAll("h3");
+      var h4 = gt.querySelectorAll("h4");
+      var p = gt.querySelectorAll("p");
+
+      if (h1.length > 0) {
+        h1.forEach((element) => {
+          let target = element.querySelectorAll(".char");
+          animateText(element, target, "h");
+        });
+      }
+
+      if (h2.length > 0) {
+        h2.forEach((element) => {
+          let target = element.querySelectorAll(".char");
+          animateText(element, target, "h");
+        });
+      }
+
+      if (h3.length > 0) {
+        h3.forEach((element) => {
+          let target = element.querySelectorAll(".char");
+          animateText(element, target, "h");
+        });
+      }
+
+      if (h4.length > 0) {
+        h4.forEach((element) => {
+          let target = element.querySelectorAll(".char");
+          animateText(element, target, "h");
+        });
+      }
+
+      if (p.length > 0) {
+        p.forEach((element) => {
+          let target = element.querySelectorAll(".line");
+          animateText(element, target, "p");
+        });
+      }
+    });
+  }
+
+  // 	HERO ANIMATION
+  function hero_func() {
+    const gth_container = gsap.utils.toArray(".gsap-st_hero");
+
+    gth_container.forEach((gth) => {
+      var h1 = gth.querySelectorAll("h1");
+      var p = gth.querySelectorAll("p");
+      var btn = gth.querySelectorAll(".gsap-st_buttons > div");
+
+      const tl = gsap.timeline({
+        defaults: { duration: 0.5, stagger: 0.15, ease: "power2" },
+      });
+
+      const anim1 = { x: "2em", opacity: 0 };
+
+      if (h1.length > 0) {
+        h1.forEach((element) => {
+          let target = element.querySelectorAll(".word");
+          tl.from(target, anim1);
+        });
+      }
+
+      if (p.length > 0) {
+        p.forEach((element) => {
+          let target = element.querySelectorAll(".line");
+          tl.from(target, anim1, "<+=0.5");
+        });
+      }
+
+      if (btn.length > 0) {
+        tl.from(btn, anim1, ">-=0.5");
+      }
+    });
+  }
+
+  // ! CARDS ANIMATION FUNCTION
+  function animateCard(trigger, target) {
+    gsap.from(target, {
+      scrollTrigger: {
+        trigger: trigger,
+        start: "top top+=90%",
+        toggleActions: "play pause resume reverse pause",
+      },
+      x: "2em",
+      y: "2em",
+      opacity: 0,
+      stagger: 0.15,
+      duration: 0.75,
+      ease: "power2",
+    });
+  }
+
+  // ! CARDS FUNCTION
+  function cards_func() {
+    const gc_container = gsap.utils.toArray(".gsap-st_cards");
+    const gl_container = gsap.utils.toArray(".gsap-st_list");
+    const form_container = gsap.utils.toArray(".gsap-st_form");
+
+    // 		.GSAP-ST_CARDS
+    if (gc_container && gc_container.length > 0) {
+      gc_container.forEach((trigger) => {
+        let target = trigger.querySelectorAll(".gsap-st_cards > div");
+        animateCard(trigger, target);
+      });
+    }
+
+    if (gc_container && gc_container.length > 0) {
+      gc_container.forEach((trigger) => {
+        let target = trigger.querySelectorAll(
+          ".gsap-st_cards > .e-con-inner > div"
+        );
+        animateCard(trigger, target);
+      });
+    }
+
+    // 		.GSAP-ST_LIST
+    if (gl_container && gl_container.length > 0) {
+      gl_container.forEach((trigger) => {
+        let target = trigger.querySelectorAll(".gsap-st_list li");
+        animateCard(trigger, target);
+      });
+    }
+
+    // 		GSAP-ST_FORM
+    if (form_container && form_container.length > 0) {
+      form_container.forEach((trigger) => {
+        let target = trigger.querySelectorAll(
+          ".gsap-st_form .elementor-form-fields-wrapper > div"
+        );
+        animateCard(trigger, target);
+      });
+    }
+  }
+
+  function misc_func() {
+    // 		FLOATING CUBE
+    const float_container = gsap.utils.toArray(".gsap-float");
+
+    if (float_container && float_container.length > 0) {
+      float_container.forEach((item) => {
+        gsap.from(item, {
+          yPercent: -7,
+          rotation: -2,
+          rotateY: -5,
+          repeat: -1,
+          duration: 2.5,
+          yoyo: true,
+          ease: "none",
+          transformOrigin: "righ bottom",
+        });
+      });
+    }
+  }
+
+  // ! CALL THE FUNCTIONS
+  sdc_func();
+  text_func();
+  hero_func();
+  cards_func();
+  misc_func();
+</script>
