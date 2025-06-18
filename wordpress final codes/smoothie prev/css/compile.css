@@ -1,4 +1,17 @@
 :root {
+  /* ! MISC UTILITIES */
+  --grad-1: #ef7770;
+  --grad-2: #8765d9;
+  --grad-3: #7dbbe0;
+
+  --bg: #eeeeee;
+
+  --light: #eeeeee;
+  --dark: #161616;
+  --dark-opac: #1919190f;
+  --dark-grad-1: #161616;
+  --dark-grad-2: #888888;
+  /* ! FLOATING MOUSE FOLLOW CARDS CARDS */
   --floating-card-w: 14vw;
   --floating-card-h: 13.5vw;
   --floating-card-w-m: calc(var(--floating-card-w) * 1.2);
@@ -10,9 +23,122 @@
   --floating-card-near: 0vw;
   --floating-card-displacement-x: 0vw;
   --floating-card-displacement-y: 0vh;
+  /* ! SCROLL CARDS */
+  --sdc-w: 26%;
+  --sdc-h: 37%;
+  --sdc-w-sm: calc(var(--sdc-w) * 0.8);
+  --sdc-h-sm: calc(var(--sdc-h) * 0.8);
+  --sdc-h-md: calc(var(--sdc-h) * 0.9);
+  --sdc-w-lg: calc(var(--sdc-w) * 1.3);
+  --sdc-h-lg: calc(var(--sdc-h) * 1.1);
+  --sdc-h-xs: calc(var(--sdc-h) * 0.7);
 }
 
 /* ! MISC UTILITIES START */
+.btn-grad {
+  background-image: linear-gradient(
+    to right,
+    #ef7770 5%,
+    #8765d9 64%,
+    #7dbbe0 100%
+  );
+}
+
+.gsap_text-container .btn-grad,
+#floating-cards-section,
+#floating-cards-section *,
+#gsap-footer-list-texts,
+#gsap-footer-list-texts *,
+#gsap-footer_sphere_section,
+#gsap-footer_sphere_section * {
+  transition: none;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.relative {
+  position: relative !important;
+}
+
+.video-wh video {
+  width: 100%;
+  height: 100%;
+  max-height: 90vh;
+  object-fit: cover;
+}
+
+.btn-grad {
+  margin: 0px;
+  padding: 10px 20px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  border-radius: 50px;
+  display: block;
+}
+
+.btn-grad:hover {
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
+
+.inner-text {
+  font-weight: 300 !important;
+  color: var(--dark-grad-2);
+}
+
+.line,
+.word,
+.char {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  text-align: inherit;
+}
+
+#footer_sphere_canvas,
+#hero-glass_sphere_canvas,
+#particle_sphere_canvas,
+#asteroids_canvas,
+#hero_glass_sphere_canvas,
+#footer_glass_sphere_canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  /* background: var(--bg); */
+  z-index: -1;
+}
+
+#asteroids_canvas {
+  z-index: 0 !important;
+}
+
+#footer_sphere_canvas {
+  position: relative !important;
+}
+
+#hero_glass_sphere_canvas,
+#footer_glass_sphere_canvas {
+  position: fixed !important;
+}
+
+#gsap-footer-our-mission-entry-gap,
+#gsap-footer-our-mission-exit-gap {
+  width: 100%;
+  height: 10vh;
+}
+
+.gsap-footer-our-mission:nth-child(1) {
+  margin-top: -100vh !important;
+}
+
 .noise-static {
   position: relative;
 }
@@ -48,7 +174,7 @@
   position: absolute;
   animation: noise 1.2s steps(3) both infinite;
   will-change: auto;
-  background-image: url("https://smoothiecommunicate.com/wp-content/uploads/2025/04/noise.png");
+  background-image: url(./assets/noise.png);
   background-size: 100px;
   width: 200%;
   height: 200%;
@@ -230,8 +356,6 @@
   transform: translateZ(var(--floating-card-near));
 }
 
-/* ! FLOATING SCROLLING CARD START */
-
 .scrolling-floating-card-endpoint {
   min-height: 100vh !important;
   height: 100vh;
@@ -248,20 +372,82 @@
   filter: sepia(20%) grayscale(50%);
   transform: translate3d(87vw, -10vw, -9vw);
 }
-/* ! FLOATING SCROLLING CARD END */
 /* ! FLOATING MOUSE FOLLOW CARDS END*/
+
+/* ! SCROLL CARDS START */
+.scroll_display_cards-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.sdc-card {
+  width: var(--sdc-w);
+  height: var(--sdc-h);
+  position: absolute;
+  /* opacity: 0.8; */
+}
+.sdc-card img,
+.sdc-card * {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(1) {
+  top: 10%;
+  left: 0%;
+  z-index: 2;
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(2) {
+  top: 55%;
+  left: 3%;
+  width: var(--sdc-w-sm);
+  height: var(--sdc-h-sm);
+}
+.scroll_display_cards-container .sdc-card:nth-child(3) {
+  top: 0%;
+  left: 35%;
+  width: var(--sdc-w-lg);
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(4) {
+  top: 65%;
+  left: 38%;
+  height: var(--sdc-h-sm);
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(5) {
+  top: 33%;
+  left: 77%;
+  width: var(--sdc-w-sm);
+  height: var(--sdc-h-md);
+  z-index: 2;
+}
+
+.scroll_display_cards-container .sdc-card:nth-child(6) {
+  top: 72%;
+  left: 71%;
+  width: var(--sdc-w-sm);
+  height: var(--sdc-h-xs);
+}
+/* ! SCROLL CARDS END*/
 
 /* ! TABLET START*/
 @media screen and (max-width: 1023px) {
   :root {
+    /* ! MISC UTILITIES */
+    /* ! FLOATING MOUSE FOLLOW CARDS CARDS */
     --floating-card-w: 25vw;
     --floating-card-h: 25vw;
+    /* ! SCROLL CARDS */
   }
 
-  /* ! MISC START */
-  /* ! MISC START */
+  /* ! MISC UTILITIES START */
+  /* ! MISC UTILITIES END */
 
-  /* ! FLOATING CARDS START */
+  /* ! FLOATING MOUSE FOLLOW CARDS START */
   .floating-cards-scene .floating-card:nth-child(1) {
     left: calc(4.81% - var(--floating-card-displacement-x));
     top: calc(13.08% - var(--floating-card-displacement-y));
@@ -306,21 +492,29 @@
   .floating-cards-scene .floating-card:nth-child(9) {
     display: none;
   }
-  /* ! FLOATING CARDS END */
+  /* ! FLOATING MOUSE FOLLOW CARDS END*/
+
+  /* ! SCROLL CARDS START */
+  /* ! SCROLL CARDS END*/
 }
 /* ! TABLET END*/
 
 /* ! MOBILE START */
 @media screen and (max-width: 767px) {
   :root {
+    /* ! MISC UTILITIES */
+    /* ! FLOATING MOUSE FOLLOW CARDS CARDS */
     --floating-card-w: 37vw;
     --floating-card-h: 37vw;
+    /* ! SCROLL CARDS */
+    --sdc-w: 30%;
+    --sdc-h: 37%;
   }
 
-  /* ! MISC START */
-  /* ! MISC END */
+  /* ! MISC UTILITIES START */
+  /* ! MISC UTILITIES END */
 
-  /* ! FLOATING CARDS START */
+  /* ! FLOATING MOUSE FOLLOW CARDS START */
   .floating-cards-scene .floating-card:nth-child(1) {
     left: calc(-3.46% - var(--floating-card-displacement-x));
     top: calc(0%);
@@ -363,7 +557,10 @@
   .floating-cards-scene .floating-card:nth-child(9) {
     display: none;
   }
-  /* ! FLOATING CARDS END */
+  /* ! FLOATING MOUSE FOLLOW CARDS END*/
+
+  /* ! SCROLL CARDS START */
+  /* ! SCROLL CARDS END*/
 }
 /* ! MOBILE END */
 

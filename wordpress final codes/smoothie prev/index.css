@@ -20,10 +20,6 @@ body {
   box-sizing: border-box;
 }
 
-.bg-dark {
-  background: var(--dark);
-}
-
 p,
 button,
 a {
@@ -33,33 +29,6 @@ a {
 
 body {
   background-color: var(--bg);
-}
-
-.fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.fixed img,
-.absolute img {
-  width: 55vw;
-  height: 100vh;
-  object-fit: contain;
-}
-
-.absolute {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
 }
 
 .container {
@@ -253,35 +222,8 @@ h2 {
   height: 100vh;
 }
 
-.h-full {
-  height: 100%;
-}
-
-.h-0 {
-  height: 0px;
-}
-
-.dark-gradient-bg {
-  background: linear-gradient(
-    to bottom,
-    #eeeeee,
-    #161616,
-    #080808,
-    #000000,
-    #eeeeee
-  ) !important;
-}
-
-.overflow-clip {
-  overflow: clip;
-}
-
 .relative {
   position: relative !important;
-}
-
-.hidden {
-  display: none;
 }
 
 .video-wh video {
@@ -459,7 +401,7 @@ h2 {
 }
 /* ! MISC UTILITIES END */
 
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 1024px) {
   * {
     font-size: 14px;
   }
@@ -470,7 +412,7 @@ h2 {
   }
 
   .max-w {
-    max-width: 60%;
+    max-width: 100%;
   }
 }
 
@@ -484,7 +426,7 @@ h2 {
   }
 
   .scroll_display_cards-container-h {
-    height: 50vh;
+    height: 60vh;
     min-height: 300px;
   }
   .flex-sm-lg {

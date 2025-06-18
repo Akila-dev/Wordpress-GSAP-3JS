@@ -1,74 +1,74 @@
+const headerDisplacement = "10vh";
+const paragraphDisplacement = "15vh";
+const buttonDisplacement = "15vh";
+
 // ! SCROLL DISPLAY CARDS
 function sdc_func() {
   const sdc_container = gsap.utils.toArray(".scroll_display_cards-container");
 
-  if (!sdc_container || sdc_container.length < 1) {
-    return;
+  if (sdc_container && sdc_container.length > 0) {
+    sdc_container.forEach((sdc) => {
+      const cards = sdc.querySelectorAll(".sdc-card");
+      const text = sdc.querySelectorAll(".sdc-text");
+
+      const p_max = 100;
+      const p_min = 0;
+      const start_points = [
+        {
+          x: p_max,
+          y: p_max,
+        },
+        {
+          x: p_min,
+          y: p_max,
+        },
+        {
+          x: -p_max,
+          y: p_max,
+        },
+      ];
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sdc,
+          start: "top bottom",
+          end: "center center",
+          scrub: 1,
+        },
+        defaults: {
+          duration: 1,
+          ease: "power2.out",
+        },
+      });
+
+      if (cards && cards.length > 0) {
+        cards.forEach((card, i) => {
+          tl.from(
+            card,
+            {
+              xPercent: start_points[i].x,
+              yPercent: start_points[i].y,
+              opacity: 0,
+            },
+            // i === 0 ? null : "<+=0.1"
+            "<"
+          );
+        });
+      }
+
+      if (text && text.length > 0) {
+        text.forEach((txt, i) => {
+          tl.from(
+            txt,
+            {
+              opacity: 0,
+            },
+            "<"
+          );
+        });
+      }
+    });
   }
-
-  sdc_container.forEach((sdc) => {
-    const cards = sdc.querySelectorAll(".sdc-card");
-    const text = sdc.querySelectorAll(".sdc-text");
-
-    const p_max = 100;
-    const p_min = 0;
-    const start_points = [
-      {
-        x: p_max,
-        y: p_max,
-      },
-      {
-        x: p_max,
-        y: -p_max,
-      },
-      {
-        x: p_min,
-        y: p_max,
-      },
-      {
-        x: p_min,
-        y: -p_max,
-      },
-      {
-        x: -p_max,
-        y: p_max,
-      },
-      {
-        x: -p_max,
-        y: -p_max,
-      },
-    ];
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sdc,
-        start: "top bottom",
-        end: "bottom bottom",
-        scrub: 1,
-      },
-    });
-    cards.forEach((card, i) => {
-      tl.from(
-        card,
-        {
-          xPercent: start_points[i].x,
-          yPercent: start_points[i].y,
-          opacity: 0,
-        },
-        "<"
-      );
-    });
-
-    text.forEach((txt, i) => {
-      tl.from(
-        txt,
-        {
-          opacity: 0,
-        },
-        "<"
-      );
-    });
-  });
 }
 
 // 	! TEXT ANIMATION FUNCTION
@@ -80,7 +80,7 @@ function animateText(element, target, type) {
 
   // SCROLL TRIGGER CONSTANTS
   const start = "top bottom";
-  const end = "top top";
+  const end = "top center";
   const scrub = 1;
 
   // 		ANIMATION
@@ -93,7 +93,23 @@ function animateText(element, target, type) {
         scrub: scrub,
       },
       opacity: 0,
-      y: "10vh",
+      // yPercent: 100,
+      y: headerDisplacement,
+      duration: duration,
+      ease: ease,
+      stagger: stagger,
+    });
+  } else if (type === "btn") {
+    gsap.from(target, {
+      scrollTrigger: {
+        trigger: element,
+        start: start,
+        end: end,
+        scrub: scrub,
+      },
+      opacity: 0,
+      // yPercent: 100,
+      y: buttonDisplacement,
       duration: duration,
       ease: ease,
       stagger: stagger,
@@ -107,7 +123,8 @@ function animateText(element, target, type) {
         scrub: scrub,
       },
       opacity: 0,
-      y: "15vh",
+      // yPercent: 100,
+      y: paragraphDisplacement,
       duration: duration,
       ease: ease,
       stagger: stagger,
@@ -119,58 +136,67 @@ function animateText(element, target, type) {
 function text_func() {
   const gt_container = gsap.utils.toArray(".gsap_text-container");
 
-  if (!gt_container || gt_container.length < 1) {
-    return;
-  }
-
   const textH1 = new SplitType(".gsap_text-container h1");
   const textH2 = new SplitType(".gsap_text-container h2");
   const textH3 = new SplitType(".gsap_text-container h3");
   const textH4 = new SplitType(".gsap_text-container h4");
   const textP = new SplitType(".gsap_text-container p");
 
-  gt_container.forEach((gt) => {
-    var h1 = gt.querySelectorAll("h1");
-    var h2 = gt.querySelectorAll("h2");
-    var h3 = gt.querySelectorAll("h3");
-    var h4 = gt.querySelectorAll("h4");
-    var p = gt.querySelectorAll("p");
+  if (gt_container && gt_container.length > 0) {
+    gt_container.forEach((gt) => {
+      var h1 = gt.querySelectorAll("h1");
+      var h2 = gt.querySelectorAll("h2");
+      var h3 = gt.querySelectorAll("h3");
+      var h4 = gt.querySelectorAll("h4");
+      var p = gt.querySelectorAll("p");
+      var btn = gt.querySelectorAll(
+        ".gsap_text-container .elementor-widget-button"
+      );
 
-    if (h1.length > 0) {
-      h1.forEach((element) => {
-        let target = element.querySelectorAll(".word");
-        animateText(element, target, "h");
-      });
-    }
+      if (h1.length > 0) {
+        h1.forEach((element) => {
+          let target = element.querySelectorAll(".word");
+          animateText(element, target, "h");
+        });
+      }
 
-    if (h2.length > 0) {
-      h2.forEach((element) => {
-        let target = element.querySelectorAll(".word");
-        animateText(element, target, "h");
-      });
-    }
+      if (h2.length > 0) {
+        h2.forEach((element) => {
+          let target = element.querySelectorAll(".word");
+          animateText(element, target, "h");
+        });
+      }
 
-    if (h3.length > 0) {
-      h3.forEach((element) => {
-        let target = element.querySelectorAll(".word");
-        animateText(element, target, "h");
-      });
-    }
+      if (h3.length > 0) {
+        h3.forEach((element) => {
+          let target = element.querySelectorAll(".word");
+          animateText(element, target, "h");
+        });
+      }
 
-    if (h4.length > 0) {
-      h4.forEach((element) => {
-        let target = element.querySelectorAll(".word");
-        animateText(element, target, "h");
-      });
-    }
+      if (h4.length > 0) {
+        h4.forEach((element) => {
+          let target = element.querySelectorAll(".word");
+          animateText(element, target, "h");
+        });
+      }
 
-    if (p.length > 0) {
-      p.forEach((element) => {
-        let target = element.querySelectorAll(".line");
-        animateText(element, target, "p");
-      });
-    }
-  });
+      if (p.length > 0) {
+        p.forEach((element) => {
+          let target = element.querySelectorAll(".line");
+          animateText(element, target, "p");
+        });
+      }
+
+      if (btn.length > 0) {
+        btn.forEach((element) => {
+          let target = element;
+          //   let target = element.querySelectorAll(".elementor-widget-button");
+          animateText(element, target, "btn");
+        });
+      }
+    });
+  }
 }
 
 // ! CALL THE FUNCTIONS

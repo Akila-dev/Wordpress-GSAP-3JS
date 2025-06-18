@@ -22,13 +22,14 @@ function init() {
   vw = window.innerWidth;
   gsap.registerPlugin(ScrollTrigger);
   const header_split = new SplitType("#floating-cards-section h1");
+  const p_split = new SplitType("#floating-cards-section p");
 
   // ! INIT FLOATING CARDS
   let tl = gsap.timeline({
     scrollTrigger: {
-      trigger: ".floating-cards-container",
+      trigger: "#floating-cards-section",
       start: "top bottom",
-      end: "+=" + window.innerHeight * 1.5,
+      end: "bottom bottom-=50%",
       scrub: 1,
       // toggleActions: "play reverse play reverse",
     },
@@ -42,6 +43,9 @@ function init() {
     z: "-5vw",
     opacity: 0,
     stagger: 0.01,
+    onStart: function () {
+      document.getElementById("floating-card-sticky").classList.add("fc-far");
+    },
   })
     .from(
       ".floating-cards-scene",
@@ -51,62 +55,97 @@ function init() {
       "<"
     )
     .from(
-      "#floating-cards-section h1",
-      {
-        y: "25vh",
-      },
-      "<+=75%"
-    )
-    .from(
-      "#floating-cards-section h1 .word",
+      ".floating-cards-text-container-1 h1 .word",
       {
         opacity: 0,
         yPercent: 100,
         stagger: 0.05,
       },
-      "<"
+      "<+=75%"
     )
     .from(
-      "#floating-cards-section .gsap-btn",
+      ".floating-cards-text-container-1 .btn-grad",
       {
         opacity: 0,
         yPercent: 100,
-        stagger: 0.01,
       },
-      ">-0.25"
+      ">"
+    )
+    .to(".floating-cards-text-container-1 h1 .word", {
+      opacity: 0,
+      yPercent: -100,
+      stagger: 0.05,
+      delay: 1,
+    })
+    .to(
+      ".floating-cards-text-container-1 .btn-grad",
+      {
+        opacity: 0,
+        yPercent: -100,
+      },
+      ">"
     );
 
   // ! FLOATING CARDS SCROLL TRIGGER
   let st = gsap.timeline({
     scrollTrigger: {
-      trigger: ".floating-cards-container",
+      trigger: "#floating-cards-section",
       start: "top top",
-      end: "+=" + window.innerWidth * 1,
-      scrub: true,
+      end: "top top-=250%",
+      scrub: 1,
+      // pin: true,
       pin: "#floating-cards-section",
-      // markers: true,
-      // toggleActions: "play reverse play reverse",
     },
   });
 
-  st.set(".scrolling-floating-card-endpoint .text-container", {
-    y: "100vh",
+  st.set(".floating-card", {
+    opacity: 1,
+    onUpdate: function () {
+      document.getElementById("floating-card-sticky").classList.add("fc-far");
+    },
   })
-    .to(".floating-card:not(.floating-card-sticky)", {
-      opacity: 0.5,
+    .to(".floating-card", {
+      opacity: 0.1,
+      duration: 3,
     })
     .to(
       ".floating-card-sticky",
       {
         scale: 1.1,
         opacity: 1,
+        duration: 1,
+        onStart: function () {
+          document
+            .getElementById("floating-card-sticky")
+            .classList.remove("fc-far");
+        },
       },
       "<"
-    );
+    )
+    .to(".floating-card", {
+      opacity: 0,
+      y: "-50vh",
+      duration: 1,
+    })
+    .to(".floating-card-sticky", {
+      scale: 2,
+      x: window.innerWidth > window.innerHeight ? "-55vw" : "-20%",
+      y: window.innerWidth > window.innerHeight ? "25vh" : "2vh",
+      duration: 1,
+    })
+    .to(".floating-cards-text-container-2 h1 .word", {
+      opacity: 1,
+      yPercent: 0,
+      stagger: 0.05,
+    })
+    .to(".floating-cards-text-container-2 p .line", {
+      opacity: 1,
+      yPercent: 0,
+      stagger: 0.05,
+    });
 
   window.addEventListener("resize", onWindowResize, false);
   window.addEventListener("mousemove", onMouseMove);
-  gsapAnimate();
 }
 
 // ! MOUSE TRIGGER
@@ -123,9 +162,6 @@ function onMouseMove(e) {
 
   mouseX = (e.clientX / windowX) * dis - dis / 2;
   mouseY = (e.clientY / windowY) * dis - dis / 2;
-
-  console.log("🚀 ~ onMouseMove ~ e.clientX:", e.clientX);
-  console.log("🚀 ~ onMouseMove ~ mouseX:", mouseX);
 
   gsap.to(".fc-near", {
     duration: 1,
@@ -146,8 +182,4 @@ function onMouseMove(e) {
 function onWindowResize() {
   vw = window.innerWidth;
   vh = window.innerHeight;
-}
-
-function gsapAnimate() {
-  console.log("GSAP");
 }

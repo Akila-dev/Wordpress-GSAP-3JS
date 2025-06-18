@@ -24,7 +24,6 @@
     <div class="noise"></div>
 
     <div>
-      <canvas id="canvas_3d"></canvas>
       <div
         style="background: var(--dark-grad-2)"
         class="container h-screen flex-center"
@@ -48,6 +47,27 @@
               grafiche e motion design pensati per dare vita alla stagione
               estiva.
             </p>
+            <div
+              class="elementor-element elementor-element-bffb793 btn-grad elementor-widget elementor-widget-button"
+              data-id="bffb793"
+              data-element_type="widget"
+              data-widget_type="button.default"
+            >
+              <div class="elementor-widget-container">
+                <div class="elementor-button-wrapper">
+                  <a
+                    class="elementor-button elementor-button-link elementor-size-sm"
+                    href="https://smoothiecommunicate.com/portfolio/"
+                  >
+                    <span class="elementor-button-content-wrapper">
+                      <span class="elementor-button-text"
+                        >view our portfolio</span
+                      >
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
           <!-- ! images -->
           <div class="flex-lg scroll_display_cards-container-h">
@@ -61,15 +81,6 @@
               <div class="sdc-card">
                 <img src="./assets/3.png" />
               </div>
-              <div class="sdc-card">
-                <img src="./assets/4.png" />
-              </div>
-              <div class="sdc-card">
-                <img src="./assets/5.png" />
-              </div>
-              <div class="sdc-card">
-                <img src="./assets/6.png" />
-              </div>
             </div>
           </div>
         </div>
@@ -77,7 +88,12 @@
       <!-- ! SCROLL display CARDS END -->
 
       <!-- ! INFINITE AUTO SCROLL START -->
-      <div id="gsap_particles-trigger" class="container h-screen flex-center">
+      <div
+        id="gsap_particles-trigger"
+        class="container h-screen flex-center relative"
+      >
+        <canvas id="particle_sphere_canvas"></canvas>
+
         <div class="grid-2 gsap_text-container">
           <h1>La passione per il Prosecco, dal cuore di Valdobbiadene</h1>
           <p>
@@ -87,6 +103,27 @@
             un'identità visiva che abbiamo curato per rispecchiare la qualità
             del prodotto e della tradizione.
           </p>
+          <div
+            class="elementor-element elementor-element-bffb793 btn-grad elementor-widget elementor-widget-button"
+            data-id="bffb793"
+            data-element_type="widget"
+            data-widget_type="button.default"
+          >
+            <div class="elementor-widget-container">
+              <div class="elementor-button-wrapper">
+                <a
+                  class="elementor-button elementor-button-link elementor-size-sm"
+                  href="https://smoothiecommunicate.com/portfolio/"
+                >
+                  <span class="elementor-button-content-wrapper">
+                    <span class="elementor-button-text"
+                      >view our portfolio</span
+                    >
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
         <div style="height: 300px; width: 100%"></div>
         <!-- ! SLIDER -->
@@ -131,7 +168,7 @@
       </div>
       <!-- ! INFINITE AUTO SCROLL END -->
 
-      <div class="h-screen">Hi</div>
+      <div class="h-screen dark-gradient-bg">Hi</div>
     </div>
 
     <script type="importmap">
@@ -146,21 +183,25 @@
       }
     </script>
     <script
+      type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"
       async
       defer
     ></script>
     <script
+      type="text/javascript"
       src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"
       async
       defer
     ></script>
-    <script src="https://cdn.jsdelivr.net/npm/letterizejs@2.0.1/lib/letterize.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/letterizejs@2.0.1/lib/letterize.min.js"
+    ></script>
     <!-- Minified UMD bundle -->
-    <script src="https://unpkg.com/split-type"></script>
+    <script type="text/javascript" src="https://unpkg.com/split-type"></script>
     <script src="gsap.js" type="module" async defer></script>
     <script src="infinite-slider.js" type="module" async defer></script>
-    <script src="three_js.js" type="module" async defer></script>
-    <!-- <script src="sphere.js" type="module" async defer></script> -->
+    <script src="sphere_particles.js" type="module" async defer></script>
   </body>
 </html>

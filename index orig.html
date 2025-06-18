@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="index.css" />
+    <link rel="stylesheet" href="floating-cards.css" />
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="browsehappy">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="#">upgrade your browser</a> to improve your experience.
+      </p>
+    <![endif]-->
+    <div class="noise"></div>
+
+    <div>
+      <canvas id="canvas"></canvas>
+      <div style="background: var(--bg)" class="container h-screen flex-center">
+        Hi
+      </div>
+
+      <!-- FLOATING CARDS START -->
+      <div
+        id="floating-cards-section"
+        class="h-screen flex-center overflow-visible relative"
+      >
+        <!-- TEXT CONTENTS START -->
+        <div
+          style="position: absolute; top: 0; left: 0; width: 100%"
+          class="text-center h-screen flex-center"
+        >
+          <div class="max-w">
+            <h1>Elevate your brand with flavorful touch.</h1>
+            <a href="#" class="btn gsap-btn">Learn More</a>
+          </div>
+        </div>
+        <!-- TEXT CONTENT END -->
+
+        <!-- CARDS START -->
+        <div class="floating-cards-container">
+          <div class="floating-cards-scene">
+            <div class="floating-card fc-far"><img src="./assets/1.png" /></div>
+            <div class="floating-card fc-near">
+              <img src="./assets/2.png" />
+            </div>
+            <div class="floating-card fc-near">
+              <img src="./assets/3.png" />
+            </div>
+            <div class="floating-card fc-far"><img src="./assets/4.png" /></div>
+            <div class="floating-card fc-near">
+              <img src="./assets/5.png" />
+            </div>
+            <div class="floating-card fc-near">
+              <img src="./assets/6.png" />
+            </div>
+            <div class="floating-card fc-far floating-card-sticky">
+              <img src="./assets/1.png" />
+            </div>
+            <div class="floating-card fc-near">
+              <img src="./assets/2.png" />
+            </div>
+            <div class="floating-card fc-near">
+              <img src="./assets/3.png" />
+            </div>
+          </div>
+        </div>
+        <!-- CARDS END -->
+      </div>
+      <!-- FLOATING CARDS END -->
+
+      <div class="h-screen">Hi</div>
+    </div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://esm.sh/three",
+          "three/": "https://esm.sh/three/",
+          "dat": "https://cdn.skypack.dev/dat.gui"
+        }
+      }
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"
+      async
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"
+      async
+      defer
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/letterizejs@2.0.1/lib/letterize.min.js"></script>
+    <!-- Minified UMD bundle -->
+    <!-- <script src="https://unpkg.com/split-type"></script> -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"
+      sync
+      defer
+    ></script>
+    <script src="floating_cards.js" type="module" async defer></script>
+    <!-- <script src="test.js" type="module" async defer></script> -->
+  </body>
+</html>

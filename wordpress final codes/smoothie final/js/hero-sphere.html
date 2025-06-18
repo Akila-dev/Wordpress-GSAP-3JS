@@ -1,0 +1,38 @@
+<script type="module" async defer>
+  document.addEventListener("DOMContentLoaded", hero_sphere_animation());
+
+  function hero_sphere_animation() {
+    // ! HERO SECTION CONSTANTS
+    const hero_trigger = document.getElementById("gsap-hero_sphere_section");
+    const hero_sphere = document.getElementById("gsap-hero-sphere");
+
+    const text_stagger = 0.1;
+    const text_ease = "circ.out";
+
+    if (hero_sphere) {
+      animateHeroSection();
+
+      // * LIST TEXT ANIMATION START
+      // * LIST TEXT ANIMATION START
+      function animateHeroSection() {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ! LIST TEXT ANIMATION
+        var tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: hero_trigger,
+            start: "top top",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+
+        tl.to(hero_sphere, {
+          duration: 1,
+          opacity: 0,
+          ease: "power3.out",
+        });
+      }
+    }
+  }
+</script>

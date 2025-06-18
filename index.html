@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title></title>
+    <title>GSAP</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="index.css" />
@@ -23,78 +23,153 @@
     <div class="noise"></div>
 
     <div>
-      <canvas id="canvas"></canvas>
-      <div style="background: var(--bg)" class="container h-screen flex-center">
+      <div class="fixed">
+        <img
+          src="./assets/sphere.png"
+          id="gsap-hero-sphere"
+          class="hero-sphere"
+        />
+      </div>
+
+      <div
+        id="gsap-hero_sphere_section"
+        class="container h-screen flex-center gsap-hero relative"
+      >
+        <!-- <canvas id="hero-glass_sphere_canvas"></canvas> -->
         Hi
       </div>
 
       <!-- FLOATING CARDS START -->
-      <div
-        id="floating-cards-section"
-        class="h-screen flex-center overflow-visible relative"
-      >
-        <!-- TEXT CONTENTS START -->
+      <div>
         <div
-          style="position: absolute; top: 0; left: 0; width: 100%"
-          class="text-center h-screen flex-center"
+          id="floating-cards-section"
+          class="h-screen w-full flex-center overflow-visible relative"
         >
-          <div class="max-w">
-            <h1>Elevate your brand with flavorful touch.</h1>
-            <a href="#" class="btn gsap-btn">Learn More</a>
+          <!-- TEXT CONTENTS START -->
+          <div
+            style="position: absolute; top: 0; left: 0; width: 100%"
+            class="text-center h-screen flex-center floating-cards-text-container-1"
+          >
+            <div class="max-w">
+              <h1>Elevate your brand with flavorful touch.</h1>
+              <a href="#" class="btn btn-grad">Learn More</a>
+            </div>
           </div>
-        </div>
-        <!-- TEXT CONTENT END -->
+          <!-- TEXT CONTENT END -->
 
-        <!-- CARDS START -->
-        <div class="floating-cards-container">
-          <div class="floating-cards-scene">
-            <div class="floating-card fc-far"><img src="./assets/1.png" /></div>
-            <div class="floating-card fc-near">
-              <img src="./assets/2.png" />
-            </div>
-            <div class="floating-card fc-near">
-              <img src="./assets/3.png" />
-            </div>
-            <div class="floating-card fc-far"><img src="./assets/4.png" /></div>
-            <div class="floating-card fc-near">
-              <img src="./assets/5.png" />
-            </div>
-            <div class="floating-card fc-near">
-              <img src="./assets/6.png" />
-            </div>
-            <div class="floating-card fc-far floating-card-sticky">
-              <img src="./assets/1.png" />
-            </div>
-            <div class="floating-card fc-near">
-              <img src="./assets/2.png" />
-            </div>
-            <div class="floating-card fc-near">
-              <img src="./assets/3.png" />
+          <div
+            style="position: absolute; top: 0; left: 0; width: 100%"
+            class="text-center h-screen grid-2 container overflow-clip"
+          >
+            <div class="h-0"></div>
+            <div class="flex-center floating-cards-text-container-2">
+              <h1>Eleganza, innovazione</h1>
+              <p>
+                Abbiamo trasformato l'eleganza e l'innovazione di un colosso
+                dell'eyewear in un racconto visivo mozzafiato, dando vita alle
+                collezioni dei brand più iconici attraverso una serie di video
+                che esaltano stile, carattere e unicità.
+              </p>
             </div>
           </div>
-        </div>
-        <!-- CARDS END -->
 
-        <!-- SCROLL CARD ENDPOINT START -->
-        <!-- <div
-          class="scrolling-floating-card-endpoint h-screen container flex-center-row"
-        >
-          <div class="scrolling-floating-card">
-            <img src="./assets/1.png" />
+          <!-- CARDS START -->
+          <div class="floating-cards-container">
+            <div class="floating-cards-scene">
+              <div class="floating-card fc-near">
+                <img src="./assets/1.png" />
+              </div>
+              <div class="floating-card fc-far">
+                <img src="./assets/2.png" />
+              </div>
+              <div class="floating-card fc-near">
+                <img src="./assets/3.png" />
+              </div>
+              <div class="floating-card fc-near">
+                <img src="./assets/4.png" />
+              </div>
+              <div class="floating-card fc-near">
+                <img src="./assets/5.png" />
+              </div>
+              <div class="floating-card fc-far">
+                <img src="./assets/6.png" />
+              </div>
+              <div id="floating-card-sticky" class="floating-card-sticky">
+                <img src="./assets/3.png" />
+              </div>
+            </div>
           </div>
-          <div class="text-container">
-            <h2>Eleganza, innovazione</h2>
-            <p>
-              Abbiamo trasformato l'eleganza e l'innovazione di un colosso
-              dell'eyewear in un racconto visivo mozzafiato, dando vita alle
-              collezioni dei brand più iconici attraverso una serie di video che
-              esaltano stile, carattere e unicità.
-            </p>
-          </div>
-        </div> -->
-        <!-- SCROLL CARD ENDPOINT END -->
+          <!-- CARDS END -->
+        </div>
       </div>
       <!-- FLOATING CARDS END -->
+
+      <div class="h-screen floating-cards-text-container-2-text-content">
+        <div class="flex-center">
+          <h1>Eleganza, innovazione</h1>
+          <p>
+            Abbiamo trasformato l'eleganza e l'innovazione di un colosso
+            dell'eyewear in un racconto visivo mozzafiato, dando vita alle
+            collezioni dei brand più iconici attraverso una serie di video che
+            esaltano stile, carattere e unicità.
+          </p>
+        </div>
+      </div>
+
+      <div class="h-screen">Hi</div>
+
+      <div
+        class="container h-screen flex-center relative overflow-hidden"
+        style="background-color: var(--dark)"
+      >
+        <canvas id="asteroids_canvas"></canvas>
+        <div class="relative">
+          <h1>Hi</h1>
+        </div>
+      </div>
+      <div class="h-screen">Hi</div>
+
+      <div id="gsap-footer-trigger" class="block">
+        <div
+          id="gsap-footer_sphere_section"
+          class="relative h-screen overflow-clip"
+        >
+          <div class="absolute flex-center">
+            <img
+              src="./assets/sphere.png"
+              id="gsap-footer-sphere"
+              class="footer-sphere"
+            />
+          </div>
+          <!-- FOOTER LIST -->
+          <div
+            id="gsap-footer-list-texts"
+            class="gsap-footer-list-texts container text-center h-screen absolute"
+          >
+            <h1>Text 1</h1>
+            <h1>Text 2</h1>
+            <h1>Text 3</h1>
+            <h1>Text 4</h1>
+          </div>
+          <!-- OUR MISSION -->
+          <div
+            class="h-screen flex-center gsap-footer-our-mission w-full text-center absolute"
+          >
+            <a href="#" class="btn btn-grad elementor-widget-button"
+              >Learn More</a
+            >
+            <h1>Elevate your brand with flavorful touch.</h1>
+          </div>
+          <div
+            class="h-screen flex-center gsap-footer-our-mission w-full text-center absolute"
+          >
+            <a href="#" class="btn btn-grad elementor-widget-button"
+              >Learn More</a
+            >
+            <h1>Elevate your brand with flavorful touch.</h1>
+          </div>
+        </div>
+      </div>
 
       <div class="h-screen">Hi</div>
     </div>
@@ -104,9 +179,7 @@
         "imports": {
           "three": "https://esm.sh/three",
           "three/": "https://esm.sh/three/",
-          "dat": "https://cdn.skypack.dev/dat.gui",
-          "animejs": "https://cdn.skypack.dev/animejs@3.2.1",
-          "splitjs": "https://cdn.skypack.dev/spltjs@1.0.8"
+          "dat": "https://cdn.skypack.dev/dat.gui"
         }
       }
     </script>
@@ -122,8 +195,18 @@
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/letterizejs@2.0.1/lib/letterize.min.js"></script>
     <!-- Minified UMD bundle -->
-    <script src="https://unpkg.com/split-type"></script>
+    <!-- <script src="https://unpkg.com/split-type"></script> -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/split-type@0.3.4/umd/index.min.js"
+      sync
+      defer
+    ></script>
     <script src="floating_cards.js" type="module" async defer></script>
+    <script src="footer.js" type="module" async defer></script>
+    <script src="hero.js" type="module" async defer></script>
+    <!-- <script src="asteroids_canvas.js" type="module" async defer></script>
+    <script src="hero_sphere_canvas.js" type="module" async defer></script>
+    <script src="footer_sphere_canvas.js" type="module" async defer></script> -->
     <!-- <script src="test.js" type="module" async defer></script> -->
   </body>
 </html>
