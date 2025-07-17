@@ -53,13 +53,6 @@
   width: var(--floating-card-w);
   height: var(--floating-card-h);
   transform-style: preserve-3d;
-
-  filter: sepia(20%) grayscale(50%);
-  /* filter: contrast(50%); */
-  /* filter: grayscale(50%); */
-
-  /* height: auto; */
-  /* max-height: ; */
 }
 
 .floating-cards-scene img,

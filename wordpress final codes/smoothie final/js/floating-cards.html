@@ -20,6 +20,24 @@
       return null;
     }
 
+    // 		SET THE TEXT CONTENT OF THE FLOATING CARD SECTION 2 FROM THE PAGE AND HIDE THE SECTION WHERE THE TEXT CONTENT IS
+    fc_section2_h1 = document.querySelector(
+      ".floating-cards-text-container-2 h1"
+    );
+    fc_section2_p = document.querySelector(
+      ".floating-cards-text-container-2 p"
+    );
+    fc_section2_text_h1 = document.querySelector(
+      ".floating-card-text-2-content h1"
+    );
+    fc_section2_text_p = document.querySelector(
+      ".floating-card-text-2-content p"
+    );
+
+    fc_section2_h1.innerHTML = fc_section2_text_h1.innerHTML;
+    fc_section2_p.innerHTML = fc_section2_text_p.innerHTML;
+
+    // 		DECLARE VARIABLES AND CONSTANTS
     vw = window.innerWidth;
     gsap.registerPlugin(ScrollTrigger);
     const header_split = new SplitType("#floating-cards-section h1");
@@ -31,11 +49,12 @@
         trigger: "#floating-cards-section",
         start: "top bottom",
         end: "bottom bottom-=50%",
-        scrub: 1,
+        scrub: 0.5,
+        anticipatePin: 1,
         // toggleActions: "play reverse play reverse",
       },
       defaults: {
-        ease: "power2",
+        ease: "power2.in",
         // stagger: 0.25,
       },
     });
@@ -71,20 +90,6 @@
           yPercent: 100,
         },
         ">"
-      )
-      .to(".floating-cards-text-container-1 h1 .word", {
-        opacity: 0,
-        yPercent: -100,
-        stagger: 0.05,
-        delay: 1,
-      })
-      .to(
-        ".floating-cards-text-container-1 .btn-grad",
-        {
-          opacity: 0,
-          yPercent: -100,
-        },
-        ">"
       );
 
     // ! FLOATING CARDS SCROLL TRIGGER
@@ -92,8 +97,8 @@
       scrollTrigger: {
         trigger: "#floating-cards-section",
         start: "top top",
-        end: "top top-=250%",
-        scrub: 1,
+        end: "top top-=350%",
+        scrub: 0.5,
         // pin: true,
         pin: "#floating-cards-section",
       },
@@ -107,8 +112,16 @@
     })
       .to(".floating-card", {
         opacity: 0.1,
-        duration: 3,
+        duration: 1,
+        delay: 1,
       })
+      .to(
+        ".floating-cards-text-container-1",
+        {
+          opacity: 0.1,
+        },
+        "<"
+      )
       .to(
         ".floating-card-sticky",
         {
@@ -125,14 +138,35 @@
       )
       .to(".floating-card", {
         opacity: 0,
-        y: "-50vh",
+        y: "-10vh",
         duration: 1,
       })
-      .to(".floating-card-sticky", {
-        scale: 2,
-        x: window.innerWidth > window.innerHeight ? "-55vw" : "-20%",
-        y: window.innerWidth > window.innerHeight ? "25vh" : "2vh",
-        duration: 1,
+      .to(
+        ".floating-cards-text-container-1",
+        {
+          opacity: 0,
+          // 				yPercent:-50,
+          duration: 1,
+        },
+        "<"
+      )
+      .to(
+        ".floating-card-sticky",
+        {
+          scale: 2,
+          x: window.innerWidth > window.innerHeight ? "-55vw" : "-15vw",
+          y: window.innerWidth > window.innerHeight ? "18vh" : "10vh",
+          duration: 1,
+        },
+        "<"
+      )
+      .set(".floating-cards-text-container-2 h1 .word", {
+        opacity: 0,
+        yPercent: 80,
+      })
+      .set(".floating-cards-text-container-2 p .line", {
+        opacity: 0,
+        yPercent: 80,
       })
       .to(".floating-cards-text-container-2 h1 .word", {
         opacity: 1,
@@ -144,6 +178,8 @@
         yPercent: 0,
         stagger: 0.05,
       });
+
+    ScrollTrigger.refresh();
 
     window.addEventListener("resize", onWindowResize, false);
     window.addEventListener("mousemove", onMouseMove);
@@ -183,5 +219,6 @@
   function onWindowResize() {
     vw = window.innerWidth;
     vh = window.innerHeight;
+    ScrollTrigger.refresh();
   }
 </script>

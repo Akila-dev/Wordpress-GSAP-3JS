@@ -245,7 +245,9 @@ h2 {
 #gsap-footer-list-texts,
 #gsap-footer-list-texts *,
 #gsap-footer_sphere_section,
-#gsap-footer_sphere_section * {
+#gsap-footer_sphere_section *,
+.gsap,
+.gsap * {
   transition: none;
 }
 

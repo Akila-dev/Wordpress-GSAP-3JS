@@ -19,11 +19,9 @@
     const text_stagger = 0.1;
     const text_ease = "circ.out";
     const sphere_y = [
-      window.innerWidth > window.innerHeight ? "102vh" : "102vh",
-      window.innerWidth > window.innerHeight ? "95vh" : "85vh",
+      window.innerWidth > window.innerHeight ? "102vh" : "122vh",
+      window.innerWidth > window.innerHeight ? "95vh" : "115vh",
     ];
-
-    // const sphere_y = ["102vh", "95vh"];
 
     // TEST LIST CONSTANTS
     const tl_scroll_length_1 = 2200;
@@ -114,7 +112,7 @@
       }).to(
         footer_sphere,
         { y: 0, scale: 2.85, duration: 2, ease: "none" },
-        "<+=0.75"
+        "<+=1"
       );
 
       if (footer_our_mission && footer_our_mission.length > 0) {
