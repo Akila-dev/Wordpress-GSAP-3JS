@@ -1,0 +1,219 @@
+<script type="text/javascript">
+  /* footer_sphere_animation — robust version */
+  (() => {
+    // store the matchMedia instance so we can kill it if re-initializing
+    let _footerMM = null;
+    let _registered = false;
+
+    window.footer_sphere_animation = function footer_sphere_animation() {
+      // Register plugin once
+      if (!_registered) {
+        gsap.registerPlugin(ScrollTrigger);
+        _registered = true;
+      }
+
+      // If already initialized, kill previous matchMedia to remove old triggers/timelines
+      if (_footerMM) {
+        try {
+          _footerMM.kill(); // kills all callbacks and ScrollTriggers created by it
+        } catch (e) {
+          // ignore
+        }
+        _footerMM = null;
+      }
+
+      // --- Selectors & DOM guards ---
+      const footer_trigger = "#gsap-footer-trigger";
+      const footer_list_section_container = "#gsap-footer-list-texts";
+      const footer_sphere_selector = "#gsap-footer-sphere";
+
+      // Ensure required DOM exists before continuing
+      const triggerEl = document.querySelector(footer_trigger);
+      const sphereEl = document.querySelector(footer_sphere_selector);
+
+      if (!triggerEl || !sphereEl) {
+        // essential elements are missing — bail out safely
+        return;
+      }
+
+      const footer_list_wrap = document.getElementById(
+        "gsap-footer-list-texts"
+      );
+      const footer_sphere_wrap = document.getElementById(
+        "gsap-footer_sphere_section"
+      );
+
+      const footer_list_text = footer_list_wrap
+        ? footer_list_wrap.querySelectorAll(".gsap-footer-list-texts h1")
+        : [];
+
+      const footer_our_mission = footer_sphere_wrap
+        ? footer_sphere_wrap.querySelectorAll(".gsap-footer-our-mission")
+        : [];
+
+      const text_stagger = 0.1;
+      const tl_min_opacity = 0.2;
+      const om_dis = "10vh";
+
+      // Create a new matchMedia instance (scoped to this footer init)
+      _footerMM = gsap.matchMedia();
+
+      // helper builder function
+      function buildTimelines(
+        tlEnd,
+        sphere_scale,
+        sphere_y,
+        exitY,
+        endScale,
+        exitScale
+      ) {
+        gsap.set(footer_list_text, { opacity: tl_min_opacity });
+        gsap.set(".gsap-footer-our-mission h1 .word", {
+          opacity: 0,
+        });
+        gsap.set(".gsap-footer-our-mission .elementor-widget-button", {
+          opacity: 0,
+          y: om_dis,
+        });
+        gsap.set(footer_sphere_selector, {
+          y: sphere_y[0],
+          scale: sphere_scale[0],
+        });
+        // Create the main pinned timeline
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: footer_trigger,
+            start: "top top",
+            end: tlEnd,
+            scrub: 0.1,
+            pin: footer_trigger,
+            anticipatePin: 1,
+            id: "footer-pinned",
+          },
+          defaults: { duration: 1, ease: "power2.in" },
+        });
+
+        // sphere movement during pin
+        tl.set(footer_sphere_selector, {
+          y: sphere_y[0],
+          scale: sphere_scale[0],
+        }).to(footer_sphere_selector, {
+          y: sphere_y[1],
+          scale: sphere_scale[1],
+          opacity: 1,
+          ease: "none",
+        });
+
+        // list text sequence
+        footer_list_text.forEach((text, index) => {
+          if (index === 0) {
+            tl.set(text, { opacity: 1 }).to(text, { opacity: 1 });
+          } else {
+            tl.to(text, { opacity: 1, duration: 2 }, "<+=0.3");
+          }
+
+          if (index !== footer_list_text.length - 1) {
+            tl.to(text, { opacity: tl_min_opacity, ease: "power2.out" });
+          } else {
+            tl.to(text, { opacity: 1, duration: 2 });
+          }
+        });
+
+        // slide the list off and scale sphere to final endScale
+        tl.to(footer_list_section_container, {
+          y: "-100vh",
+          opacity: 0,
+          duration: 2,
+        }).to(
+          footer_sphere_selector,
+          { y: 0, scale: endScale, duration: 2, ease: "none" },
+          "<+=0.75"
+        );
+
+        // mission block sequence
+        footer_our_mission.forEach((single) => {
+          const text = single.querySelectorAll("h1 .word");
+          const btn = single.querySelector(".elementor-widget-button");
+
+          tl.to(btn, { opacity: 1, y: 0 })
+            .to(text, { opacity: 1, y: 0, stagger: text_stagger })
+            .to(btn, { opacity: 0, y: "-10vh" })
+            .to(text, { opacity: 0, y: "-10vh" }, "<");
+        });
+
+        // After-pin timeline (separate trigger)
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: "#gsap-footer-end-trigger",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.1,
+              id: "footer-after-pin",
+            },
+            defaults: { duration: 4, ease: "none" },
+          })
+          .set(footer_sphere_selector, {
+            y: "0vh",
+            scale: endScale,
+            opacity: 1,
+          })
+          .to(footer_sphere_selector, {
+            y: exitY[0],
+            scale: exitScale[0],
+            duration: 1,
+          })
+          .to(footer_sphere_selector, { y: exitY[1], scale: exitScale[1] });
+      }
+
+      // --- matchMedia cases ---
+      // Landscape
+      _footerMM.add("(orientation: landscape)", () => {
+        buildTimelines(
+          "top top-=650%",
+          [0.5, 1.75],
+          ["100vh", "110vh"],
+          ["-75vh", "-145vh"],
+          4,
+          [2.5, 1.75]
+        );
+
+        // Return cleanup for this query (GSAP will call it when it stops matching)
+        return () => {
+          // cleanup if needed (GSAP will kill ScrollTriggers created inside this block automatically)
+        };
+      });
+
+      // Mobile portrait
+      _footerMM.add("(max-width: 599px) and (orientation: portrait)", () => {
+        buildTimelines(
+          "top top-=450%",
+          [1, 1.5],
+          ["102vh", "75vh"],
+          ["-40vh", "-115vh"],
+          2.85,
+          [2.85, 2]
+        );
+        return () => {};
+      });
+
+      // Tablet portrait
+      _footerMM.add("(min-width: 600px) and (orientation: portrait)", () => {
+        buildTimelines(
+          "top top-=450%",
+          [1, 1.5],
+          ["102vh", "85vh"],
+          ["-50vh", "-125vh"],
+          2.85,
+          [2.5, 2]
+        );
+        return () => {};
+      });
+
+      // Refresh once after setup on the next animation frame (ensures layout has settled)
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+    };
+  })();
+</script>

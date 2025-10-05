@@ -1,0 +1,89 @@
+<script type="text/javascript">
+  // ! GLOBALS
+  let splitInstances = [];
+  let cleanups = [];
+  gsap.registerPlugin(ScrollTrigger);
+
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
+  // Lock scroll until animations are ready
+  window.scrollTo(0, 0);
+  document.documentElement.classList.add("no-scroll");
+  document.body.classList.add("no-scroll");
+
+  // ✅ Init only after everything is fully loaded & fonts are ready
+  document.addEventListener("DOMContentLoaded", function (event) {
+    window.addEventListener(
+      "load",
+      () => {
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(startAnimations).catch(startAnimations);
+        } else {
+          startAnimations(); // fallback
+        }
+      },
+      false
+    );
+  });
+
+  function startAnimations() {
+    gsap_animations_init();
+
+    document.documentElement.classList.remove("no-scroll");
+    document.body.classList.remove("no-scroll");
+    ScrollTrigger.refresh();
+  }
+
+  function gsap_animations_init(needsResize = false) {
+    requestAnimationFrame(() => {
+      // --- Clean up old triggers, timelines, etc ---
+      cleanups.forEach((fn) => fn && fn());
+      cleanups = [];
+
+      // --- Revert old SplitText ---
+      splitInstances.forEach((inst) => inst.revert());
+      splitInstances = [];
+
+      // --- Rebuild SplitText instances ---
+      const selectors = [
+        ".gsap_text-container h1",
+        ".gsap_text-container h2",
+        ".gsap_text-container h3",
+        ".gsap_text-container h4",
+        ".gsap_text-container p",
+        ".gsap-footer-our-mission h1",
+        "#floating-cards-section h1",
+        "#floating-cards-section p",
+      ];
+
+      selectors.forEach((sel) => {
+        if (document.querySelector(sel)) {
+          splitInstances.push(new SplitType(sel));
+        }
+      });
+
+      cleanups.push(window.text_animation?.());
+      // cleanups.push(window.footer_sphere_animation?.());
+      cleanups.push(window.hero_sphere_animation?.());
+      cleanups.push(window.dark_on_scroll?.());
+      cleanups.push(window.sdc_func?.());
+      cleanups.push(window.floating_cards_animation?.());
+    });
+  }
+
+  // --- On resize: debounce & re-init ---
+  let resizeTimer;
+  let prevWidth = window.innerWidth;
+  window.addEventListener("resize", () => {
+    if (window.innerWidth !== prevWidth) {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        gsap_animations_init(true);
+        ScrollTrigger.refresh();
+      }, 250);
+      prevWidth = window.innerWidth;
+    }
+  });
+</script>

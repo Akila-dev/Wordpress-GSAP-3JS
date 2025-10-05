@@ -1,0 +1,72 @@
+<script type="text/javascript">
+  // ! GLOBALS
+  let splitInstances = [];
+  gsap.registerPlugin(ScrollTrigger);
+
+  if ("scrollRestoration" in history) {
+    history.scrollRestoration = "manual";
+  }
+
+  window.scrollTo(0, 0);
+  document.documentElement.classList.add("no-scroll");
+  document.body.classList.add("no-scroll");
+
+  // ✅ Init only after everything is fully loaded
+  window.addEventListener("load", () => {
+    document.fonts.ready.then(() => {
+      gsap_animations_init();
+
+      document.documentElement.classList.remove("no-scroll");
+      document.body.classList.remove("no-scroll");
+      ScrollTrigger.refresh();
+    });
+  });
+
+  function gsap_animations_init(needsResize) {
+    requestAnimationFrame(() => {
+      // Revert old splits before making new ones
+      splitInstances.forEach((inst) => inst.revert());
+      splitInstances = [];
+
+      // Rebuild split text and store instances
+      splitInstances.push(
+        new SplitType(
+          ".gsap_text-container h1, \
+           .gsap_text-container h2, \
+           .gsap_text-container h3, \
+           .gsap_text-container h4, \
+           .gsap_text-container p, \
+           .gsap-footer-our-mission h1, \
+           #floating-cards-section h1, \
+           #floating-cards-section p"
+        )
+      );
+
+      if (needsResize === "resize") {
+        // Re-init only what needs refreshing on resize
+        text_func();
+        // floating_cards_animation();
+        hero_sphere_animation();
+        window.footer_sphere_animation();
+      } else {
+        // First-time init (full)
+        text_func();
+        // floating_cards_animation();
+        hero_sphere_animation();
+        window.footer_sphere_animation();
+        dark_on_scroll();
+        sdc_func();
+      }
+    });
+  }
+
+  // On resize: debounce & re-init
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      gsap_animations_init("resize");
+      ScrollTrigger.refresh();
+    }, 250);
+  });
+</script>

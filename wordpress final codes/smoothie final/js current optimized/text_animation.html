@@ -1,0 +1,111 @@
+<script type="text/javascript">
+  window.text_animation = function text_animation() {
+    // Select all containers
+    const containers = gsap.utils.toArray(".gsap_text-container");
+    if (!containers.length) return;
+
+    // Wait until next paint to ensure SplitType is applied
+    requestAnimationFrame(() => {
+      containers.forEach((gt) => {
+        // Animate headings
+        gt.querySelectorAll("h1, h2, h3, h4").forEach((el) => {
+          const words = el.querySelectorAll(".word");
+          if (!words.length) return;
+
+          let yValue = "10vh"; // default for headings
+
+          const mm = gsap.matchMedia();
+
+          mm.add("(max-width: 768px)", () => {
+            animateWords(words, el, yValue);
+          });
+
+          mm.add("(min-width: 769px)", () => {
+            animateWords(words, el, yValue);
+          });
+        });
+
+        // Animate paragraphs
+        gt.querySelectorAll("p").forEach((el) => {
+          const lines = el.querySelectorAll(".line");
+          if (!lines.length) return;
+
+          const yValue = "15vh";
+          const mm = gsap.matchMedia();
+
+          mm.add("(max-width: 768px)", () => {
+            animateWords(lines, el, yValue);
+          });
+          mm.add("(min-width: 769px)", () => {
+            animateWords(lines, el, yValue);
+          });
+        });
+
+        // Animate buttons with Y offset
+        gt.querySelectorAll(".btn-grad:not(.gsap-no-y)").forEach((el) => {
+          const mm = gsap.matchMedia();
+          mm.add("(max-width: 768px)", () => {
+            animateWords([el], el, "10vh", "btn");
+          });
+          mm.add("(min-width: 769px)", () => {
+            animateWords([el], el, "10vh", "btn");
+          });
+        });
+
+        // Animate buttons without Y offset
+        gt.querySelectorAll(".gsap-no-y").forEach((el) => {
+          const mm = gsap.matchMedia();
+          mm.add("(max-width: 768px)", () => {
+            animateWords([el], el, 0, "btn-opacity");
+          });
+          mm.add("(min-width: 769px)", () => {
+            animateWords([el], el, 0, "btn-opacity");
+          });
+        });
+      });
+
+      // Refresh ScrollTriggers after all animations are registered
+      ScrollTrigger.refresh();
+    });
+
+    // --- Helper function ---
+    function animateWords(targets, element, yValue = 0, type = "h") {
+      if (!targets || !targets.length) return;
+
+      if (type === "btn" || type === "btn-opacity") {
+        gsap.fromTo(
+          targets,
+          {
+            opacity: 0,
+            y: type === "btn-opacity" ? 0 : yValue,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.05,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: element,
+              start: "top bottom",
+              end: "bottom 70%",
+              scrub: 1,
+            },
+          }
+        );
+      } else {
+        gsap.from(targets, {
+          opacity: 0,
+          y: yValue,
+          stagger: type === "h" ? 0.03 : 0.05,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: element,
+            start: "top bottom",
+            end: "bottom 70%",
+            scrub: 1,
+          },
+        });
+      }
+    }
+  };
+</script>

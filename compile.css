@@ -84,11 +84,11 @@ body.no-scroll {
 
 .gsap_text-container .btn-grad,
 #floating-cards-section,
-#floating-cards-section *:not(.elementor-sticky),
+#floating-cards-section *,
 #gsap-footer-list-texts,
 #gsap-footer-list-texts *,
 #gsap-footer_sphere_section,
-#gsap-footer_sphere_section *:not(.elementor-sticky),
+#gsap-footer_sphere_section *,
 .gsap,
 .gsap *,
 #gsap-footer-end-trigger,
@@ -136,11 +136,11 @@ body.no-scroll {
   overflow: clip;
 }
 
-.relative:not(.elementor-sticky) {
+.relative {
   position: relative !important;
 }
 
-.absolute-section:not(.elementor-sticky) {
+.absolute-section {
   position: absolute;
   top: 0;
   left: 0;
@@ -509,6 +509,7 @@ body.no-scroll {
   height: 100dvh !important;
   overflow: hidden;
   position: relative;
+  will-change: transform;
 }
 
 @supports not (height: 100dvh) {

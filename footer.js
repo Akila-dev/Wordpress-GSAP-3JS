@@ -1,128 +1,190 @@
-document.addEventListener("DOMContentLoaded", footer_sphere_animation());
+(() => {
+  let _footerMM = null;
+  let tl = null;
+  let afterPinTl = null;
 
-function footer_sphere_animation() {
-  // ! FOOTER SECTION CONSTANTS
-  const footer_trigger = document.getElementById("gsap-footer-trigger");
-  const footer_sphere = document.getElementById("gsap-footer-sphere");
-  const footer_list_section_container = document.getElementById(
-    "gsap-footer-list-texts"
-  );
+  window.footer_sphere_animation = function footer_sphere_animation() {
+    // Kill previous instance
+    if (_footerMM) {
+      _footerMM.kill();
+      _footerMM = null;
+    }
 
-  const footer_list_text = footer_list_section_container.querySelectorAll(
-    ".gsap-footer-list-texts h1"
-  );
+    // --- Selectors ---
+    const footer_trigger = "#gsap-footer-trigger";
+    const footer_list_wrap = document.getElementById("gsap-footer-list-texts");
+    const footer_sphere_selector = "#gsap-footer-sphere";
+    const footer_sphere_wrap = document.getElementById(
+      "gsap-footer_sphere_section"
+    );
 
-  const footer_sphere_section = document.getElementById(
-    "gsap-footer_sphere_section"
-  );
-  const footer_our_mission = footer_sphere_section.querySelectorAll(
-    ".gsap-footer-our-mission"
-  );
-  const text_stagger = 0.1;
-  const text_ease = "circ.out";
+    const triggerEl = document.querySelector(footer_trigger);
+    const sphereEl = document.querySelector(footer_sphere_selector);
 
-  //   TEST LIST CONSTANTS
-  const tl_scroll_length_1 = 2200;
-  const tl_min_opactiy = 0.2;
+    if (!triggerEl || !sphereEl || !footer_list_wrap || !footer_sphere_wrap)
+      return;
 
-  // ! INIT VALUES OF TEXT SECTIONS
-  const splitText = new SplitType(".gsap-footer-our-mission h1");
-  const om_dis = "10vh";
+    const footer_list_text = footer_list_wrap.querySelectorAll(
+      ".gsap-footer-list-texts h1"
+    );
+    const footer_our_mission = footer_sphere_wrap.querySelectorAll(
+      ".gsap-footer-our-mission"
+    );
 
-  if (footer_sphere) {
-    animateFooterSection();
+    const text_stagger = 0.1;
+    const tl_min_opacity = 0.2;
+    const om_dis = "10vh";
 
-    // * LIST TEXT ANIMATION START
-    // * LIST TEXT ANIMATION START
-    function animateFooterSection() {
-      gsap.registerPlugin(ScrollTrigger);
+    _footerMM = gsap.matchMedia();
 
-      // ! LIST TEXT ANIMATION
-      var tl = gsap.timeline({
+    requestAnimationFrame(() => {
+      // MatchMedia breakpoints
+      _footerMM.add("(orientation: landscape)", () => {
+        buildTimelines(
+          "+=650%",
+          [0.5, 1.75],
+          ["100vh", "110vh"],
+          ["-75vh", "-145vh"],
+          4,
+          [2.5, 1.75]
+        );
+        return () => {
+          tl?.kill();
+          afterPinTl?.kill();
+        };
+      });
+
+      _footerMM.add("(max-width: 599px) and (orientation: portrait)", () => {
+        buildTimelines(
+          "+=450%",
+          [1, 1.5],
+          ["102vh", "75vh"],
+          ["-40vh", "-115vh"],
+          3.25,
+          [2.85, 2]
+        );
+        return () => {
+          tl?.kill();
+          afterPinTl?.kill();
+        };
+      });
+
+      _footerMM.add("(min-width: 600px) and (orientation: portrait)", () => {
+        buildTimelines(
+          "+=450%",
+          [1, 1.5],
+          ["102vh", "85vh"],
+          ["-50vh", "-125vh"],
+          2.85,
+          [2.5, 2]
+        );
+        return () => {
+          tl?.kill();
+          afterPinTl?.kill();
+        };
+      });
+
+      // Refresh ScrollTriggers after all animations are registered
+      ScrollTrigger.refresh();
+    });
+
+    function buildTimelines(
+      tlEnd,
+      sphere_scale,
+      sphere_y,
+      exitY,
+      endScale,
+      exitScale
+    ) {
+      // Calculate dynamic end based on footer trigger height
+      const footerHeight = window.innerHeight;
+      // const tlEnd = "+=" + footerHeight * endMultiplier;
+
+      tl = gsap.timeline({
         scrollTrigger: {
           trigger: footer_trigger,
           start: "top top",
-          end: "top bottom-=" + tl_scroll_length_1,
-          scrub: 1,
-          pin: footer_trigger,
-          //   markers: true,
+          end: tlEnd,
+          scrub: 0.1,
+          pin: true,
+          anticipatePin: 1,
+          id: "footer-pinned",
+          invalidateOnRefresh: true,
         },
-        defaults: { duration: 1, ease: "power2.out" },
+        defaults: { duration: 1, ease: "power2.in" },
       });
 
-      gsap.set(footer_list_text, { opacity: tl_min_opactiy });
-      gsap.set(".gsap-footer-our-mission h1 .word", {
-        opacity: 0,
-        y: om_dis,
-      });
-      gsap.set(".gsap-footer-our-mission .elementor-widget-button", {
-        opacity: 0,
-        y: om_dis,
-      });
-      gsap.set(footer_sphere, { yPercent: 100 });
-
-      tl.to(footer_sphere, { yPercent: 95, scale: 1.5 });
-
-      if (footer_list_text && footer_list_text.length > 0) {
-        footer_list_text.forEach((text, index) => {
-          // if (index === 0) {
-          //   tl.set(text, { opacity: 1 }, "<");
-          // } else {
-          tl.to(
-            text,
-            {
-              opacity: 1,
-              // stagger: 0.1,
-              ease: text_ease,
-            },
-            "<"
-          );
-          // }
-
-          if (index !== footer_list_text.length - 1) {
-            tl.to(text, {
-              opacity: tl_min_opactiy,
-              ease: "power2.in",
-            });
-          } else {
-            tl.to(text, { opacity: 1 });
-          }
-        });
-      }
-      tl.to(footer_list_section_container, { yPercent: -100 }).to(
-        footer_sphere,
-        { yPercent: 0, scale: 2.5 },
-        "<"
+      tl.fromTo(
+        footer_sphere_selector,
+        {
+          y: sphere_y[0],
+          scale: sphere_scale[0],
+          opacity: 0,
+        },
+        {
+          y: sphere_y[1],
+          scale: sphere_scale[1],
+          opacity: 1,
+          ease: "none",
+          // immediateRender: false,
+        }
       );
-      if (footer_our_mission && footer_our_mission.length > 0) {
-        footer_our_mission.forEach((single, index) => {
-          let text = single.querySelectorAll("h1 .word");
-          let btn = single.querySelector(".elementor-widget-button");
 
-          tl.to(btn, {
-            opacity: 1,
+      // List text animation
+      footer_list_text.forEach((text, i) => {
+        if (i === 0) tl.to(text, { opacity: 1 });
+        else tl.to(text, { opacity: 1, duration: 2 }, "<+=0.3");
+        if (i !== footer_list_text.length - 1)
+          tl.to(text, { opacity: tl_min_opacity, ease: "power2.out" });
+      });
+
+      // Slide list off & scale sphere
+      tl.to(footer_list_wrap, { y: "-100vh", opacity: 0, duration: 2 }).to(
+        footer_sphere_selector,
+        { y: 0, scale: endScale, duration: 2, ease: "none" },
+        "<+=0.75"
+      );
+
+      // Mission text sequence
+      footer_our_mission.forEach((single) => {
+        const text = single.querySelectorAll("h1 .word");
+        const btn = single.querySelector(".elementor-widget-button");
+        tl.to(btn, { opacity: 1, y: 0 })
+          .to(text, { opacity: 1, y: 0, stagger: text_stagger })
+          .to(btn, { opacity: 0, y: "-10vh" })
+          .to(text, { opacity: 0, y: "-10vh" }, "<");
+      });
+
+      // After pin timeline
+      afterPinTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#gsap-footer-end-trigger",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.1,
+          invalidateOnRefresh: true,
+          id: "footer-after-pin",
+        },
+        defaults: { duration: 4, ease: "none" },
+      });
+      afterPinTl
+        .fromTo(
+          footer_sphere_selector,
+          {
             y: 0,
-          })
-            .to(text, {
-              opacity: 1,
-              y: 0,
-              stagger: text_stagger,
-            })
-            .to(btn, {
-              opacity: 0,
-              y: "-10vh",
-            })
-            .to(
-              text,
-              {
-                opacity: 0,
-                y: "-10vh",
-              },
-              "<"
-            );
+            scale: endScale,
+          },
+          {
+            y: exitY[0],
+            scale: exitScale[0],
+            duration: 1,
+            immediateRender: false,
+          }
+        )
+        .to(footer_sphere_selector, {
+          y: exitY[1],
+          scale: exitScale[1],
         });
-      }
-      tl.to(footer_sphere, { scale: 1 });
     }
-  }
-}
+  };
+})();

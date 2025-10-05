@@ -1,0 +1,99 @@
+<script type="text/javascript">
+  (function () {
+    document.addEventListener("DOMContentLoaded", gsap_animation);
+
+    function gsap_animation() {
+      gsap.registerPlugin(ScrollTrigger); // register once globally
+      dark_on_scroll();
+      sdc_func();
+      ScrollTrigger.refresh(); // refresh once after setup
+    }
+
+    // ! MAKE THEME DARK ON SCROLL
+    function dark_on_scroll() {
+      const dark_section = gsap.utils.toArray(".gsap-scroll-dark");
+
+      if (dark_section.length > 0) {
+        const dark_color = "#161616";
+        const light_color = "#DEDEDE";
+
+        dark_section.forEach((dc) => {
+          gsap.to(".elementor-kit-4250", {
+            scrollTrigger: {
+              trigger: dc,
+              start: "top center",
+              end: "top center+=10",
+              scrub: 0.1,
+            },
+            "--e-global-color-785b64d": dark_color,
+            "--e-global-color-d3ae19d": light_color,
+            "--e-global-color-primary": light_color,
+            "--e-global-color-secondary": light_color,
+          });
+
+          gsap.to(".elementor-kit-4250", {
+            scrollTrigger: {
+              trigger: dc,
+              start: "bottom center",
+              end: "bottom center-=10",
+              scrub: 0.1,
+            },
+            "--e-global-color-785b64d": light_color,
+            "--e-global-color-d3ae19d": dark_color,
+            "--e-global-color-primary": dark_color,
+            "--e-global-color-secondary": dark_color,
+          });
+        });
+      }
+    }
+
+    // ! SCROLL DISPLAY CARDS
+    function sdc_func() {
+      const sdc_container = gsap.utils.toArray(
+        ".scroll_display_cards-container"
+      );
+
+      if (sdc_container.length > 0) {
+        sdc_container.forEach((sdc) => {
+          const cards = sdc.querySelectorAll(".sdc-card");
+
+          const p_max = 100;
+          const p_min = 0;
+          const start_points = [
+            { x: p_max, y: p_max },
+            { x: p_min, y: p_max },
+            { x: -p_max, y: p_max },
+          ];
+
+          const tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: sdc,
+              start: "top bottom",
+              end: "center center",
+              scrub: 1,
+            },
+            defaults: {
+              duration: 1,
+              ease: "power2.out",
+            },
+          });
+
+          if (cards.length > 0) {
+            cards.forEach((card, i) => {
+              const pos = start_points[i % start_points.length]; // safe cycling
+              tl.from(
+                card,
+                {
+                  xPercent: pos.x,
+                  yPercent: pos.y,
+                  opacity: 0,
+                },
+                "<"
+              );
+            });
+          }
+        });
+      }
+    }
+  })();
+</script>

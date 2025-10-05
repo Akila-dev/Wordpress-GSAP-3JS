@@ -1,0 +1,84 @@
+<script type="text/javascript">
+  // GSAP Text Animation
+  function animateText(element, target, type) {
+    if (!target || target.length === 0) return;
+
+    let yValue = 0;
+    if (type === "h") yValue = "10vh";
+    if (type === "p") yValue = "15vh";
+    if (type === "btn") yValue = "10vh";
+
+    // Create matchMedia
+    let mm = gsap.matchMedia();
+
+    mm.add("(max-width: 768px)", () => {
+      buildAnimation("top bottom", "bottom 70%", target, element, yValue, type);
+    });
+
+    mm.add("(min-width: 769px)", () => {
+      buildAnimation("top bottom", "bottom 70%", target, element, yValue, type);
+    });
+
+    ScrollTrigger.refresh();
+  }
+
+  function buildAnimation(start, end, target, element, yValue, type) {
+    if (type === "btn" || type === "btn-opacity") {
+      gsap.fromTo(
+        target,
+        {
+          opacity: 0,
+          y: type === "btn-opacity" ? 0 : yValue,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.05,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: element,
+            start: start,
+            end: end,
+            scrub: 1,
+          },
+        }
+      );
+    } else {
+      gsap.from(target, {
+        scrollTrigger: {
+          trigger: element,
+          start: start,
+          end: end,
+          scrub: 1,
+        },
+        opacity: 0,
+        ease: "power2.out",
+        stagger: type === "h" ? 0.03 : 0.05,
+        y: type === "btn-opacity" ? 0 : yValue,
+      });
+    }
+  }
+
+  // Trigger GSAP text animation function (Function called in the gsap functions init file)
+  function text_func() {
+    const containers = gsap.utils.toArray(".gsap_text-container");
+
+    containers.forEach((gt) => {
+      gt.querySelectorAll("h1, h2, h3, h4").forEach((el) =>
+        animateText(el, el.querySelectorAll(".word"), "h")
+      );
+
+      gt.querySelectorAll("p").forEach((el) =>
+        animateText(el, el.querySelectorAll(".line"), "p")
+      );
+
+      gt.querySelectorAll(".btn-grad:not(.gsap-no-y)").forEach((el) =>
+        animateText(el, el, "btn")
+      );
+
+      gt.querySelectorAll(".gsap-no-y").forEach((el) =>
+        animateText(el, el, "btn-opacity")
+      );
+    });
+  }
+</script>

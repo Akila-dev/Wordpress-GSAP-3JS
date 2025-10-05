@@ -1,0 +1,58 @@
+*,
+html,
+body {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.bg-dark {
+  background: var(--dark);
+}
+
+body {
+  background-color: var(--bg);
+}
+
+.fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.absolute {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  padding: 3em;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.container-x {
+  width: 100%;
+  padding: 0 3em;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-visible {
+  overflow-y: visible;
+  overflow-x: clip;
+}

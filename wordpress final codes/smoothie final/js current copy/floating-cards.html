@@ -1,66 +1,82 @@
-(() => {
-  let _floatingCardsMM = null;
-  let tl = null;
-  let st = null;
+<script type="text/javascript">
+  (function () {
+    // ! GLOBALS (scoped inside IIFE, won’t leak)
+    let vw = window.innerWidth;
+    let vh = window.innerHeight;
+    let windowX = window.innerWidth;
+    let windowY = window.innerHeight;
+    let mouseX = 0,
+      mouseY = 0;
 
-  // ! INIT
-  window.floating_cards_animation = function floating_cards_animation() {
-    // Kill previous instance
-    if (_floatingCardsMM) {
-      _floatingCardsMM.kill();
-      _floatingCardsMM = null;
+    let fc_splitInstances = [];
+
+    // ! SPLIT TEXT
+    function splitFloatingCardsText() {
+      fc_splitInstances.forEach((inst) => inst.revert());
+      fc_splitInstances = [];
+
+      fc_splitInstances.push(
+        new SplitType("#floating-cards-section h1, #floating-cards-section p", {
+          types: "lines, words",
+        })
+      );
     }
 
-    if (!document.querySelector("#floating-cards-section")) return;
+    // ! INIT
+    function init() {
+      if (!document.querySelector("#floating-cards-section")) return;
 
-    // MACTCH MEDIA
-    _floatingCardsMM = gsap.matchMedia();
+      // copy text content
+      const fc_section2_h1 = document.querySelector(
+        ".floating-cards-text-container-2 h1"
+      );
+      const fc_section2_p_container = document.querySelector(
+        ".floating-cards-text-container-2 .paragraph-text-container"
+      );
+      const fc_section2_text_h1 = document.querySelector(
+        ".floating-card-text-2-content h1"
+      );
+      const fc_section2_text_p_container = document.querySelector(
+        ".floating-card-text-2-content .paragraph-text-container"
+      );
 
-    // MatchMedia breakpoints
-    _floatingCardsMM.add("(orientation: landscape)", () => {
-      buildTimelines("-55vw", "18vh", 3.5, "+=350%");
-      return () => {
-        tl?.kill();
-        st?.kill();
-      };
-    });
-    _floatingCardsMM.add(
-      "(min-width: 768px) and (orientation: portrait)",
-      () => {
-        buildTimelines("-55vw", "18vh", 3.5, "+=250%");
-        return () => {
-          tl?.kill();
-          st?.kill();
-        };
+      if (fc_section2_h1 && fc_section2_text_h1) {
+        fc_section2_h1.innerHTML = fc_section2_text_h1.innerHTML;
       }
-    );
-    _floatingCardsMM.add(
-      "(max-width: 767px) and (orientation: portrait)",
-      () => {
-        buildTimelines("-15vw", "10vh", 2.5, "+=250%");
-        return () => {
-          tl?.kill();
-          st?.kill();
-        };
+      if (fc_section2_p_container && fc_section2_text_p_container) {
+        fc_section2_p_container.innerHTML =
+          fc_section2_text_p_container.innerHTML;
       }
-    );
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // split before animations
+      splitFloatingCardsText();
+
+      let mm = gsap.matchMedia();
+      mm.add("(max-width: 768px)", () => {
+        buildTimelines("-15vw", "10vh", "top top-=250%");
+      });
+      mm.add("(min-width: 769px)", () => {
+        buildTimelines("-55vw", "18vh", "top top-=350%");
+      });
+
+      ScrollTrigger.refresh();
+
+      window.addEventListener("resize", onWindowResize, false);
+      window.addEventListener("mousemove", onMouseMove);
+    }
 
     // ! TIMELINES
-    function buildTimelines(
-      stickyCardFinalX,
-      stickyCardFinalY,
-      endMultiplier,
-      stEnd
-    ) {
-      const sectionHeight = window.innerHeight;
-      const tlEnd = "+=150%";
+    function buildTimelines(stickyCardFinalX, stickyCardFinalY, stEnd) {
       // intro
-      tl = gsap.timeline({
+      let tl = gsap.timeline({
         scrollTrigger: {
           trigger: "#floating-cards-section",
           start: "top bottom",
-          end: tlEnd,
+          end: "bottom bottom-=50%",
           scrub: 0.5,
+          anticipatePin: 1,
         },
         defaults: { ease: "power2.in" },
       });
@@ -91,15 +107,13 @@
         );
 
       // scroll/pin
-      st = gsap.timeline({
+      let st = gsap.timeline({
         scrollTrigger: {
           trigger: "#floating-cards-section",
           start: "top top",
           end: stEnd,
           scrub: 0.5,
           pin: "#floating-cards-section",
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
         },
       });
 
@@ -172,35 +186,41 @@
         });
     }
 
-    const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const mouse = { x: pos.x, y: pos.y };
-
-    // window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mousemove", (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-
-    // Timeline for smooth follow
-    gsap.ticker.add(() => {
+    // ! MOUSE MOVE
+    function onMouseMove(e) {
       let dis = 80;
-      // Lerp (linear interpolation) for smoothness
-      pos.x += (mouse.x - pos.x) * 0.1;
-      pos.y += (mouse.y - pos.y) * 0.1;
+      mouseX = (e.clientX / windowX) * dis - dis / 2;
+      mouseY = (e.clientY / windowY) * dis - dis / 2;
 
-      mouseX = (pos.x / window.innerWidth) * dis - dis / 2;
-      mouseY = (pos.y / window.innerHeight) * dis - dis / 2;
-
-      gsap.set(".fc-near", {
+      gsap.to(".fc-near", {
         duration: 1,
         x: mouseX,
         y: mouseY,
+        ease: "power2.out",
       });
-      gsap.set(".fc-far", {
+      gsap.to(".fc-far", {
         duration: 1,
         x: mouseX * 0.75,
         y: mouseY * 0.75,
+        ease: "power2.out",
       });
-    });
-  };
-})();
+    }
+
+    // ! RESIZE
+    function onWindowResize() {
+      vw = window.innerWidth;
+      vh = window.innerHeight;
+      windowX = vw;
+      windowY = vh;
+
+      splitFloatingCardsText();
+      ScrollTrigger.refresh();
+    }
+
+    // single init
+    document.addEventListener("DOMContentLoaded", init);
+    // document.addEventListener("DOMContentLoaded", () => {
+    //   document.fonts.ready.then(init);
+    // });
+  })();
+</script>

@@ -1,0 +1,202 @@
+<script type="text/javascript">
+  // FUNCTION CALLED IN THE GSAP FUNCTIONS INIT FILE
+  (() => {
+    let _floatingCardsMM = null;
+    let tl = null;
+    let st = null;
+
+    // ! INIT
+    window.floating_cards_animation = function floating_cards_animation() {
+      // Kill previous instance
+      if (_floatingCardsMM) {
+        _floatingCardsMM.kill();
+        _floatingCardsMM = null;
+      }
+
+      if (!document.querySelector("#floating-cards-section")) return;
+
+      // MACTCH MEDIA
+      _floatingCardsMM = gsap.matchMedia();
+
+      // ! TIMELINES
+      function buildTimelines(
+        stickyCardFinalX,
+        stickyCardFinalY,
+        endMultiplier,
+        stEnd
+      ) {
+        const sectionHeight = window.innerHeight;
+        // const tlEnd = "+=" + sectionHeight * 1.5;
+        // const stEnd = "+=" + sectionHeight * endMultiplier;
+        const tlEnd = "+=150%";
+        // intro
+        tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#floating-cards-section",
+            start: "top bottom",
+            end: tlEnd,
+            scrub: 0.5,
+          },
+          defaults: { ease: "power2.in" },
+        });
+
+        tl.from(".floating-card", {
+          z: "-5vw",
+          opacity: 0,
+          stagger: 0.01,
+          onStart: () => {
+            document
+              .getElementById("floating-card-sticky")
+              ?.classList.add("fc-far");
+          },
+        })
+          .from(".floating-cards-scene", { y: "50vh" }, "<")
+          .from(
+            ".floating-cards-text-container-1 h1 .word",
+            { opacity: 0, yPercent: 100, stagger: 0.05 },
+            "<+=75%"
+          )
+          .from(
+            ".floating-cards-text-container-1 .btn-grad",
+            {
+              opacity: 0,
+              yPercent: 100,
+            },
+            ">"
+          );
+
+        // scroll/pin
+        st = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#floating-cards-section",
+            start: "top top",
+            end: stEnd,
+            scrub: 0.5,
+            pin: "#floating-cards-section",
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        st.set(".floating-card", {
+          opacity: 1,
+          onUpdate: () => {
+            document
+              .getElementById("floating-card-sticky")
+              ?.classList.add("fc-far");
+          },
+        })
+          .to(".floating-card", { opacity: 0.1, duration: 1, delay: 1 })
+          .to(".floating-cards-text-container-1", { opacity: 0.1 }, "<")
+          .to(
+            ".floating-card-sticky",
+            {
+              scale: 1.1,
+              opacity: 1,
+              duration: 1,
+              onStart: () => {
+                document
+                  .getElementById("floating-card-sticky")
+                  ?.classList.remove("fc-far");
+              },
+            },
+            "<"
+          )
+          .to(".floating-card", { opacity: 0, y: "-10vh", duration: 1 })
+          .to(
+            ".floating-cards-text-container-1",
+            { opacity: 0, duration: 1 },
+            "<"
+          )
+          .to(
+            ".floating-card-sticky",
+            {
+              scale: 2,
+              x: stickyCardFinalX,
+              y: stickyCardFinalY,
+              duration: 1,
+            },
+            "<"
+          )
+          .set(".floating-cards-text-container-2 h1 .word", {
+            opacity: 0,
+            yPercent: 80,
+          })
+          .set(".floating-cards-text-container-2 p .line", {
+            opacity: 0,
+            yPercent: 80,
+          })
+          .set(".floating-cards-text-container-2 .elementor-widget-button", {
+            opacity: 0,
+            yPercent: 80,
+          })
+          .to(".floating-cards-text-container-2 h1 .word", {
+            opacity: 1,
+            yPercent: 0,
+            stagger: 0.05,
+          })
+          .to(".floating-cards-text-container-2 p .line", {
+            opacity: 1,
+            yPercent: 0,
+            stagger: 0.05,
+          })
+          .to(".floating-cards-text-container-2 .elementor-widget-button", {
+            opacity: 1,
+            yPercent: 0,
+            stagger: 0.05,
+          });
+      }
+
+      // MatchMedia breakpoints
+      _floatingCardsMM.add("(min-width: 768px)", () => {
+        buildTimelines("-55vw", "18vh", 3.5, "+=350%");
+        return () => {
+          tl?.kill();
+          st?.kill();
+        };
+      });
+
+      _floatingCardsMM.add("(max-width: 767px)", () => {
+        buildTimelines("-15vw", "10vh", 2.5, "+=250%");
+        return () => {
+          tl?.kill();
+          st?.kill();
+        };
+      });
+
+      // Refresh after everything is ready
+      // requestAnimationFrame(() => ScrollTrigger.refresh());
+
+      const pos = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+      const mouse = { x: pos.x, y: pos.y };
+
+      // window.addEventListener("mousemove", onMouseMove);
+      window.addEventListener("mousemove", (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+
+      // Timeline for smooth follow
+      gsap.ticker.add(() => {
+        let dis = 80;
+        // Lerp (linear interpolation) for smoothness
+        pos.x += (mouse.x - pos.x) * 0.1;
+        pos.y += (mouse.y - pos.y) * 0.1;
+
+        mouseX = (pos.x / window.innerWidth) * dis - dis / 2;
+        mouseY = (pos.y / window.innerHeight) * dis - dis / 2;
+
+        gsap.set(".fc-near", {
+          duration: 1,
+          x: mouseX,
+          y: mouseY,
+        });
+        gsap.set(".fc-far", {
+          duration: 1,
+          x: mouseX * 0.75,
+          y: mouseY * 0.75,
+        });
+      });
+    };
+  })();
+</script>

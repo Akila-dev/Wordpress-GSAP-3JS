@@ -1,0 +1,82 @@
+<script type="text/javascript">
+  (function () {
+    document.addEventListener("DOMContentLoaded", () => {
+      document.fonts.ready.then(text_anim);
+    });
+
+    let splitInstances = [];
+
+    function text_anim() {
+      requestAnimationFrame(() => {
+        // Revert old splits before making new ones
+        splitInstances.forEach((inst) => inst.revert());
+        splitInstances = [];
+
+        // Rebuild split text and store instances
+        splitInstances.push(
+          new SplitType(
+            ".gsap_text-container h1, .gsap_text-container h2, .gsap_text-container h3, .gsap_text-container h4, .gsap_text-container p"
+          )
+        );
+
+        // Rebuild animations
+        text_func();
+      });
+    }
+
+    // On resize: clean triggers, re-split text, refresh
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        text_anim();
+        ScrollTrigger.refresh();
+      }, 250);
+    });
+
+    // GSAP Text Animation
+    function animateText(element, target, type) {
+      if (!target || target.length === 0) return;
+
+      const isMobile = window.matchMedia("(max-width: 768px)").matches;
+      const start = isMobile ? "top bottom" : "top bottom";
+      const end = isMobile ? "top 70%" : "top center";
+
+      let yValue = 0;
+      if (type === "h") yValue = "10vh";
+      if (type === "p") yValue = "15vh";
+      if (type === "btn") yValue = "10vh";
+
+      gsap.from(target, {
+        scrollTrigger: { trigger: element, start, end, scrub: 1 },
+        opacity: 0,
+        ease: "power2.out",
+        stagger: type === "h" ? 0.03 : 0.05,
+        y: type === "btn-opacity" ? 0 : yValue,
+      });
+    }
+
+    // Trigger GSAP text animation function
+    function text_func() {
+      const containers = gsap.utils.toArray(".gsap_text-container");
+
+      containers.forEach((gt) => {
+        gt.querySelectorAll("h1, h2, h3, h4").forEach((el) =>
+          animateText(el, el.querySelectorAll(".word"), "h")
+        );
+
+        gt.querySelectorAll("p").forEach((el) =>
+          animateText(el, el.querySelectorAll(".line"), "p")
+        );
+
+        gt.querySelectorAll(".btn-grad:not(.gsap-no-y)").forEach((el) =>
+          animateText(el, el, "btn")
+        );
+
+        gt.querySelectorAll(".gsap-no-y").forEach((el) =>
+          animateText(el, el, "btn-opacity")
+        );
+      });
+    }
+  })();
+</script>

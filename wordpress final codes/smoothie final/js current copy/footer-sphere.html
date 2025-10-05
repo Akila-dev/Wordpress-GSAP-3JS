@@ -1,0 +1,175 @@
+<script type="text/javascript">
+  (function () {
+    document.addEventListener("DOMContentLoaded", footer_sphere_animation);
+
+    function footer_sphere_animation() {
+      // ! FOOTER SECTION CONSTANTS
+      const footer_trigger = "#gsap-footer-trigger";
+      const footer_sphere_section = "#gsap-footer_sphere_section";
+      const footer_list_section_container = "#gsap-footer-list-texts";
+      const footer_sphere = "#gsap-footer-sphere";
+
+      const footer_list_text = document
+        .getElementById("gsap-footer-list-texts")
+        .querySelectorAll(".gsap-footer-list-texts h1");
+
+      const footer_our_mission = document
+        .getElementById("gsap-footer_sphere_section")
+        .querySelectorAll(".gsap-footer-our-mission");
+
+      const text_stagger = 0.1;
+      const text_ease = "circ.out";
+      const sphere_y = [
+        window.innerWidth > window.innerHeight ? "102vh" : "102vh",
+        window.innerWidth > window.innerHeight ? "95vh" : "85vh",
+      ];
+
+      // const sphere_y = ["102vh", "95vh"];
+
+      // TEST LIST CONSTANTS
+      const tl_scroll_length_1 = 2200;
+      const tl_min_opactiy = 0.2;
+
+      // ! INIT VALUES OF TEXT SECTIONS
+      const om_dis = "10vh";
+
+      if (footer_sphere) {
+        // Delay SplitType to ensure DOM is ready
+        requestAnimationFrame(() => {
+          new SplitType(".gsap-footer-our-mission h1");
+          animateFooterSection();
+        });
+      }
+
+      // Main animation logic
+      function animateFooterSection() {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // ! LIST TEXT ANIMATION
+        let tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: footer_trigger,
+            start: "top top",
+            end:
+              window.innerWidth > window.innerHeight
+                ? "top top-=650%"
+                : "top top-=450%",
+            scrub: 0.1,
+            pin: footer_trigger,
+            anticipatePin: 1,
+            id: "pinned",
+          },
+          defaults: { duration: 1, ease: "power2.in" },
+        });
+
+        gsap.set(footer_list_text, { opacity: tl_min_opactiy });
+        gsap.set(".gsap-footer-our-mission h1 .word", {
+          opacity: 0,
+          // y: om_dis,
+        });
+        gsap.set(".gsap-footer-our-mission .elementor-widget-button", {
+          opacity: 0,
+          y: om_dis,
+        });
+
+        tl.set(footer_sphere, { y: sphere_y[0], ease: "none" }).to(
+          footer_sphere,
+          {
+            y: sphere_y[1],
+            scale: 1.5,
+            opacity: 1,
+            ease: "none",
+          }
+        );
+
+        if (footer_list_text && footer_list_text.length > 0) {
+          footer_list_text.forEach((text, index) => {
+            if (index === 0) {
+              tl.set(text, { opacity: 1 }).to(text, { opacity: 1 });
+            } else {
+              tl.to(
+                text,
+                {
+                  opacity: 1,
+                  duration: 2,
+                },
+                "<+=0.3"
+              );
+            }
+
+            if (index !== footer_list_text.length - 1) {
+              tl.to(text, {
+                opacity: tl_min_opactiy,
+                ease: "power2.out",
+              });
+            } else {
+              tl.to(text, { opacity: 1, duration: 2 });
+            }
+          });
+        }
+
+        tl.to(footer_list_section_container, {
+          y: "-100vh",
+          opacity: 0,
+          duration: 2,
+        }).to(
+          footer_sphere,
+          { y: 0, scale: 2.85, duration: 2, ease: "none" },
+          "<+=0.75"
+        );
+
+        if (footer_our_mission && footer_our_mission.length > 0) {
+          footer_our_mission.forEach((single) => {
+            let text = single.querySelectorAll("h1 .word");
+            let btn = single.querySelector(".elementor-widget-button");
+
+            tl.to(btn, {
+              opacity: 1,
+              y: 0,
+            })
+              .to(text, {
+                opacity: 1,
+                y: 0,
+                stagger: text_stagger,
+              })
+              .to(btn, {
+                opacity: 0,
+                y: "-10vh",
+              })
+              .to(
+                text,
+                {
+                  opacity: 0,
+                  y: "-10vh",
+                },
+                "<"
+              );
+          });
+        }
+
+        // AFTER PIN ANIMATION
+        let tl2 = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#gsap-footer-end-trigger",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.1,
+            id: "after-pin",
+          },
+          defaults: { duration: 4, ease: "none" },
+        });
+
+        tl2
+          .set(footer_sphere, { y: "0vh", scale: 2.85, opacity: 1 })
+          .to(footer_sphere, { y: "-50vh", scale: 2.35, duration: 1 })
+          .to(footer_sphere, {
+            y: window.innerWidth > window.innerHeight ? "-135vh" : "-147vh",
+            scale: 1.5,
+          });
+
+        // Refresh ScrollTrigger after setup
+        ScrollTrigger.refresh();
+      }
+    }
+  })();
+</script>

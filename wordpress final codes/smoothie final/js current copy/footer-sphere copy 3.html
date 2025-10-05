@@ -1,0 +1,178 @@
+<script type="text/javascript">
+  (() => {
+    let _footerMM = null;
+    let _registered = false;
+    let tl = null;
+
+    window.footer_sphere_animation = function footer_sphere_animation() {
+      if (!_registered) {
+        gsap.registerPlugin(ScrollTrigger);
+        _registered = true;
+      }
+
+      if (_footerMM) {
+        try {
+          _footerMM.kill();
+        } catch (e) {}
+        _footerMM = null;
+      }
+
+      const footer_trigger = "#gsap-footer-trigger";
+      const footer_list_wrap = document.getElementById(
+        "gsap-footer-list-texts"
+      );
+      const footer_sphere_selector = "#gsap-footer-sphere";
+      const footer_sphere_wrap = document.getElementById(
+        "gsap-footer_sphere_section"
+      );
+
+      const triggerEl = document.querySelector(footer_trigger);
+      const sphereEl = document.querySelector(footer_sphere_selector);
+      if (!triggerEl || !sphereEl || !footer_list_wrap || !footer_sphere_wrap)
+        return;
+
+      const footer_list_text = footer_list_wrap.querySelectorAll(
+        ".gsap-footer-list-texts h1"
+      );
+      const footer_our_mission = footer_sphere_wrap.querySelectorAll(
+        ".gsap-footer-our-mission"
+      );
+
+      const text_stagger = 0.1;
+      const tl_min_opacity = 0.2;
+      const om_dis = "10vh";
+
+      _footerMM = gsap.matchMedia();
+
+      function buildTimelines(
+        sphere_scale,
+        sphere_y,
+        exitY,
+        endScale,
+        exitScale
+      ) {
+        // Reset initial states inside timeline
+        tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: footer_trigger,
+            start: "top top",
+            end: () => "+=" + triggerEl.offsetHeight, // dynamic end
+            scrub: 0.1,
+            pin: footer_trigger,
+            anticipatePin: 1,
+            id: "footer-pinned",
+            invalidateOnRefresh: true,
+          },
+          defaults: { duration: 1, ease: "power2.in" },
+          onStart: () => {
+            gsap.set(footer_list_text, { opacity: tl_min_opacity });
+            gsap.set(".gsap-footer-our-mission h1 .word", { opacity: 0 });
+            gsap.set(".gsap-footer-our-mission .elementor-widget-button", {
+              opacity: 0,
+              y: om_dis,
+            });
+            gsap.set(footer_sphere_selector, {
+              y: sphere_y[0],
+              scale: sphere_scale[0],
+              opacity: 0,
+            });
+          },
+        });
+
+        // Sphere movement
+        tl.to(footer_sphere_selector, {
+          y: sphere_y[1],
+          scale: sphere_scale[1],
+          opacity: 1,
+          ease: "none",
+        });
+
+        // List animation
+        footer_list_text.forEach((text, index) => {
+          tl.to(
+            text,
+            { opacity: 1, duration: index === 0 ? 1 : 2 },
+            "<+=0.3"
+          ).to(text, {
+            opacity: index !== footer_list_text.length - 1 ? tl_min_opacity : 1,
+            ease: "power2.out",
+          });
+        });
+
+        // Slide list off & scale sphere
+        tl.to(footer_list_wrap, { y: "-100%", opacity: 0, duration: 2 }).to(
+          footer_sphere_selector,
+          { y: 0, scale: endScale, duration: 2, ease: "none" },
+          "<+=0.75"
+        );
+
+        // Mission text
+        footer_our_mission.forEach((single) => {
+          const text = single.querySelectorAll("h1 .word");
+          const btn = single.querySelector(".elementor-widget-button");
+
+          tl.to(btn, { opacity: 1, y: 0 })
+            .to(text, { opacity: 1, y: 0, stagger: text_stagger })
+            .to(btn, { opacity: 0, y: "-10vh" })
+            .to(text, { opacity: 0, y: "-10vh" }, "<");
+        });
+
+        // After-pin exit
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: "#gsap-footer-end-trigger",
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.1,
+              id: "footer-after-pin",
+            },
+            defaults: { duration: 4, ease: "none" },
+          })
+          .set(footer_sphere_selector, { y: 0, scale: endScale, opacity: 1 })
+          .to(footer_sphere_selector, {
+            y: exitY[0],
+            scale: exitScale[0],
+            duration: 1,
+          })
+          .to(footer_sphere_selector, { y: exitY[1], scale: exitScale[1] });
+      }
+
+      // MatchMedia queries
+      _footerMM.add("(orientation: landscape)", () => {
+        buildTimelines(
+          [0.5, 1.75],
+          ["100vh", "110vh"],
+          ["-75vh", "-145vh"],
+          4,
+          [2.5, 1.75]
+        );
+        return () => tl?.kill();
+      });
+
+      _footerMM.add("(max-width: 599px) and (orientation: portrait)", () => {
+        buildTimelines(
+          [1, 1.5],
+          ["102vh", "75vh"],
+          ["-40vh", "-115vh"],
+          2.85,
+          [2.85, 2]
+        );
+        return () => tl?.kill();
+      });
+
+      _footerMM.add("(min-width: 600px) and (orientation: portrait)", () => {
+        buildTimelines(
+          [1, 1.5],
+          ["102vh", "85vh"],
+          ["-50vh", "-125vh"],
+          2.85,
+          [2.5, 2]
+        );
+        return () => tl?.kill();
+      });
+
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    };
+  })();
+</script>
